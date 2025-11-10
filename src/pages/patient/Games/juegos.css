@@ -1,0 +1,123 @@
+.juegos-page {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.juegos-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.selector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  background: #e0e0e0;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.tab-btn.active {
+  background: #2563eb;
+  color: white;
+}
+
+.juego-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.niveles {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.nivel {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background: #f8f9fa;
+}
+.nivel.activo {
+  background: #2563eb;
+  color: white;
+}
+
+.estado {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem 0;
+  font-weight: 600;
+}
+
+.btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn:hover {
+  background: #1d4ed8;
+}
+
+.grid {
+  display: grid;
+  gap: 10px;
+  justify-content: center;
+}
+.cell {
+  background: #698aaa;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+.cell:hover {
+  background: #e2e8f0;
+}
+
+.area-juego {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  background: #526375;
+  border-radius: 12px;
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+.punto {
+  width: 28px;
+  height: 28px;
+  background: #dc2626;
+  border-radius: 50%;
+  position: absolute;
+  transition: transform 0.1s;
+  cursor: pointer;
+}
+
+.resultado {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.placeholder {
+  text-align: center;
+  color: #6b7280;
+}

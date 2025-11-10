@@ -1,0 +1,768 @@
+/* 🌤️ global.css — versión clara con tonos azules */
+
+/* Reset general */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #f5f9ff, #dfefff);
+  color: #1a1a1a;
+  text-align: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ==== DASHBOARD ==== */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* ==== BOTONES ==== */
+button {
+  background-color: #0077ff;
+  border: none;
+  padding: 12px 22px;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(0, 119, 255, 0.3);
+  transition: all 0.25s ease;
+}
+
+button:hover {
+  background-color: #3399ff;
+  transform: translateY(-2px);
+}
+
+/* Botón de cierre de sesión */
+.logout-btn {
+  background-color: #e63946;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(230, 57, 70, 0.25);
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c71c2f;
+  transform: translateY(-2px);
+}
+
+/* ==== PANELES ==== */
+.admin-panel {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 25px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  text-align: left;
+}
+
+/* Encabezado del panel */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 10px;
+}
+
+/* ==== TABLAS ==== */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 15px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  border: 1px solid #e2e8f0;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.admin-table th {
+  background-color: #e8f3ff;
+  color: #004aad;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 14px;
+}
+
+.admin-table tr:nth-child(even) {
+  background-color: #f9fcff;
+}
+
+.admin-table tr:hover {
+  background-color: #d9ecff;
+  transition: background 0.2s ease;
+}
+
+/* ==== BOTONES DE ACCIÓN ==== */
+.edit-btn,
+.save-btn {
+  background-color: #0077ff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.edit-btn:hover,
+.save-btn:hover {
+  background-color: #005fcc;
+  transform: translateY(-1px);
+}
+
+/* ==== SCROLL PERSONALIZADO ==== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f0f4ff;
+}
+::-webkit-scrollbar-thumb {
+  background: #0077ff;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3399ff;
+}
+
+.card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.exams-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.exams-table th {
+  background: #f0f4ff;
+  text-align: left;
+  padding: 8px;
+}
+
+.exams-table td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+
+/* Botones de estado */
+.status-btn {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.status-btn.done {
+  background: #28a745;
+  color: white;
+}
+
+.status-btn.pending {
+  background: #ffc107;
+  color: #333;
+}
+
+/* Botones acción */
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.edit-btn {
+  background: #007bff;
+  color: white;
+}
+
+.save-btn {
+  background: #17a2b8;
+  color: white;
+}
+
+.cancel-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.edit-btn:hover,
+.save-btn:hover,
+.cancel-btn:hover,
+.status-btn:hover {
+  opacity: 0.8;
+}
+
+select {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* --- ESTILOS PARA LA TABLA DE EXÁMENES --- */
+
+.exams-container {
+  padding: 2rem;
+}
+
+.exams-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+  color: #1d3557;
+}
+
+.exams-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+}
+
+.exams-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.exams-table th {
+  background: #e9f0ff;
+  color: #1d3557;
+  font-weight: 600;
+  padding: 12px;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.exams-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.93rem;
+}
+
+.exams-table tr:hover {
+  background-color: #f8fbff;
+}
+
+.status-badge {
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.status-badge.done {
+  background-color: #d4f8e8;
+  color: #1b7a3f;
+}
+
+.status-badge.pending {
+  background-color: #ffe8cc;
+  color: #c56b1f;
+}
+
+.view-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.view-link:hover {
+  text-decoration: underline;
+}
+
+.no-file {
+  color: #888;
+}
+
+.loading-text,
+.no-exams {
+  text-align: center;
+  color: #666;
+  font-size: 1rem;
+  padding: 1rem 0;
+}
+
+/* === Remisiones (Specialist) === */
+
+.referrals-container {
+  padding: 1rem;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.form-card,
+.table-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  max-width: 700px;
+}
+
+.form-card label {
+  display: block;
+  margin-top: 0.8rem;
+  font-weight: 500;
+}
+
+.form-card select,
+.form-card textarea {
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.form-card textarea {
+  resize: vertical;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #005fcc;
+}
+
+/* Tabla */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.data-table th {
+  background: #f0f4ff;
+  text-align: left;
+  padding: 10px;
+}
+
+.data-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* === Remisiones (Patient) === */
+
+.referrals-container {
+  padding: 1rem;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.table-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-top: 1rem;
+  max-width: 700px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.data-table th {
+  background: #f0f4ff;
+  text-align: left;
+  padding: 10px;
+}
+
+.data-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table-card p {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  margin: 1rem 0;
+}
+
+/* === Remisiones (Admin) === */
+
+.filter-bar {
+  margin-bottom: 1rem;
+  max-width: 700px;
+}
+
+.filter-bar input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.filter-bar input:focus {
+  border-color: #4c7df0;
+  box-shadow: 0 0 0 2px rgba(76, 125, 240, 0.15);
+}
+
+.admin-users-container {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.users-list {
+  flex: 1;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.users-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.users-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.users-list li:hover {
+  background: #e6f0ff;
+}
+
+.users-list li.selected {
+  background: #dbeafe;
+  font-weight: 600;
+}
+
+.btn-delete {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  color: #dc2626;
+  transition: transform 0.2s;
+}
+
+.btn-delete:hover {
+  transform: scale(1.1);
+}
+
+.user-form {
+  flex: 2;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.user-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.user-form label {
+  font-weight: 500;
+  color: #374151;
+}
+
+.user-form input,
+.user-form select,
+.user-form textarea {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.user-form input:focus,
+.user-form select:focus,
+.user-form textarea:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+.btn-save {
+  margin-top: 1rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-save:hover {
+  background: #1d4ed8;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-cancel {
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #4b5563;
+}
+
+.admin-users-container {
+  display: flex;
+  gap: 2rem;
+  padding: 20px;
+}
+
+.users-list {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.users-list h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #1e3a8a;
+}
+
+.users-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.users-list li {
+  cursor: pointer;
+  background: #f3f4f6;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.users-list li:hover {
+  background: #e0e7ff;
+}
+
+.users-list li.selected {
+  background: #c7d2fe;
+  font-weight: 600;
+}
+
+.user-form {
+  flex: 2;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.user-form h2 {
+  color: #1e3a8a;
+  margin-bottom: 1rem;
+}
+
+.user-form label {
+  display: block;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.user-form input,
+.user-form select,
+.user-form textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  margin-top: 4px;
+}
+
+.btn-save {
+  margin-top: 15px;
+  background-color: #2563eb;
+  color: white;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-save:hover {
+  background-color: #1d4ed8;
+}
+
+.profile-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  background: #f9fafb;
+  min-height: 100vh;
+}
+
+.profile-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.profile-card h2 {
+  text-align: center;
+  color: #1e3a8a;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-group label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.info-group p {
+  background: #f3f4f6;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 0;
+}
+
+.observations {
+  background: #fef9c3;
+  border-left: 4px solid #facc15;
+}
+
+.loading,
+.error {
+  text-align: center;
+  color: #6b7280;
+  padding: 2rem;
+}
+
+.role-tag {
+  display: inline-block;
+  background-color: #dbeafe;
+  color: #1e40af;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 6px 10px;
+  text-transform: capitalize;
+}
+
+/* === Modo oscuro === */
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+body.dark-mode .card,
+body.dark-mode table,
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border-color: #444;
+}
+
+body.dark-mode button {
+  background-color: #444;
+  color: white;
+}
