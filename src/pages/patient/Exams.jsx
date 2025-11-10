@@ -44,10 +44,10 @@ export default function PatientExams() {
   };
 
   return (
-    <div className="exams-container">
-      <h2 className="exams-title">🩺 Mis Exámenes</h2>
+    <div>
+      <h1 style={{ marginBottom: "1.5rem" }}>Mis Exámenes</h1>
 
-      <div className="exams-card">
+      <div className="card">
         {loading ? (
           <p className="loading-text">Cargando tus exámenes...</p>
         ) : exams.length === 0 ? (

@@ -116,6 +116,7 @@ export default function SpecialistExams() {
       {/* 🔹 Encabezado */}
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}>
         <div>
+        <h1>Examenes</h1>
           <label style={{ fontWeight: 600, marginRight: "8px" }}>Filtrar por estado:</label>
           <select
             value={filter}
@@ -130,14 +131,10 @@ export default function SpecialistExams() {
 
         <button
           onClick={handleNewExam}
+          className="btn btn-primary"
           style={{
-            background: "#2563eb",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            padding: "8px 14px",
-            cursor: "pointer",
-            fontWeight: "bold",
+            padding: "8px 12px",
+            fontSize: "0.9rem",
           }}
         >
           ➕ Nuevo examen

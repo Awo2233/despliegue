@@ -35,7 +35,8 @@
   padding: 1.5rem;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   width: 100%;
-  max-width: 600px;
+  /* increase max-width so large cells fit comfortably */
+  max-width: 820px;
 }
 
 .niveles {
@@ -77,19 +78,27 @@
 
 .grid {
   display: grid;
-  gap: 10px;
+  gap: 14px; /* more spacing so larger tiles breathe */
   justify-content: center;
 }
 .cell {
   background: #698aaa;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
-  width: 50px;
-  height: 50px;
+  border-radius: 12px;
+  /* Larger tiles to make the different letter easier to spot */
+  width: 88px;
+  height: 88px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 2rem; /* default big size; the inline fontSize from JS will override per level */
+  color: white;
 }
 .cell:hover {
-  background: #e2e8f0;
+  background: #e2e8f0; /* light hover for light mode */
+  color: #0f172a;
 }
 
 .area-juego {
@@ -121,3 +130,65 @@
   text-align: center;
   color: #6b7280;
 }
+
+/* Dark mode adjustments for the games page */
+body.dark-mode .juegos-page { background: transparent; }
+
+body.dark-mode .juegos-header h1,
+body.dark-mode .juegos-header p,
+body.dark-mode .selector,
+body.dark-mode .juego-card,
+body.dark-mode .niveles,
+body.dark-mode .estado,
+body.dark-mode .placeholder {
+  color: #e6eef8;
+}
+
+body.dark-mode .tab-btn {
+  background: #1f2937; /* dark gray */
+  color: #e6eef8;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+body.dark-mode .tab-btn.active {
+  background: linear-gradient(180deg, var(--color-500), var(--color-600));
+  color: #fff;
+}
+
+body.dark-mode .juego-card {
+  background: #0b1220;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+body.dark-mode .nivel {
+  background: #0f1724;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #e6eef8;
+}
+
+body.dark-mode .nivel.activo {
+  background: linear-gradient(180deg, var(--color-500), var(--color-600));
+  color: #fff;
+}
+
+body.dark-mode .btn {
+  background: linear-gradient(180deg, var(--color-500), var(--color-600));
+  color: #fff;
+}
+
+body.dark-mode .grid .cell {
+  background: #122034;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #e6eef8;
+}
+
+body.dark-mode .cell:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+body.dark-mode .area-juego {
+  background: #071021;
+}
+
+body.dark-mode .punto { background: #ef4444; }
+

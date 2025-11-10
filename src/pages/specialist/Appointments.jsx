@@ -47,34 +47,26 @@ export default function SpecialistAppointments() {
 
   return (
     <div>
-      <h2 style={{ fontSize: "1.8rem", marginBottom: "1rem" }}>
-        Citas Asignadas ({profile.role})
-      </h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+        <h1>Citas Asignadas</h1>
+        <button
+          onClick={() => navigate("/specialist/new-appointment")}
+          className="btn btn-primary"
+          style={{ padding: "8px 12px", fontSize: "0.9rem" }}
+        >
+          ➕ Nueva cita
+        </button>
+      </div>
 
-      <button
-        onClick={() => navigate("/specialist/new-appointment")}
-        style={{
-          background: "#007bff",
-          color: "white",
-          border: "none",
-          padding: "10px 16px",
-          borderRadius: "8px",
-          cursor: "pointer",
-          marginBottom: "1.5rem",
-        }}
-      >
-        + Agendar nueva cita
-      </button>
-
-      <div style={{ background: "white", padding: "1.5rem", borderRadius: "12px" }}>
+      <div className="card">
         {loading ? (
           <p>Cargando...</p>
         ) : appointments.length === 0 ? (
           <p>No hay citas registradas.</p>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <table className="exams-table">
             <thead>
-              <tr style={{ background: "#f0f4ff", textAlign: "left" }}>
+              <tr style={{ background: "var(--color-50)", textAlign: "left" }}>
                 <th>Fecha</th>
                 <th>Paciente</th>
                 <th>Estado</th>

@@ -36,16 +36,16 @@ export default function PatientReferrals() {
   };
 
   return (
-    <div className="referrals-container">
-      <h2 className="section-title">Mis remisiones</h2>
+    <div>
+      <h1 style={{ marginBottom: "1.5rem" }}>Mis Remisiones</h1>
 
-      <div className="table-card">
+      <div className="card">
         {loading ? (
           <p>Cargando...</p>
         ) : referrals.length === 0 ? (
           <p>No tienes remisiones registradas.</p>
         ) : (
-          <table className="data-table">
+          <table className="exams-table">
             <thead>
               <tr>
                 <th>De</th>

@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 
 // ⚙️ Ajustes globales
-import { SettingsProvider } from "./context/SettingsContext";
+// SettingsProvider is provided in main.jsx; don't wrap again here
 import SettingsBubble from "./components/SettingsBubble";
 
 // Auth
@@ -49,7 +49,7 @@ export default function App() {
   if (loading) return <div style={{ padding: 40 }}>Cargando autenticación...</div>;
 
   return (
-  <SettingsProvider> 
+    <>
     <BrowserRouter>
       <Routes>
         {/* Rutas públicas */}
@@ -111,6 +111,6 @@ export default function App() {
     </BrowserRouter>
 
      <SettingsBubble />
-    </SettingsProvider>
+    </>
   );
 }

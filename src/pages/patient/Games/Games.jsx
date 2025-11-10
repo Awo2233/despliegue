@@ -64,7 +64,7 @@ function EncontrarLetra() {
   const [tiempo, setTiempo] = useState(nivelesLetra[nivel].tiempo);
   const [grid, setGrid] = useState([]);
   const [targetIndex, setTargetIndex] = useState(null);
-  const [modo, setModo] = useState("incorrecta");
+  const [, setModo] = useState("incorrecta");
   const timerRef = useRef(null);
 
   useEffect(() => {

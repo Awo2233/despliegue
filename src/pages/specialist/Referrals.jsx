@@ -41,28 +41,26 @@ export default function SpecialistReferrals() {
   };
 
   return (
-    <div className="referrals-container">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2 className="section-title">
-          Remisiones de {profile.role === "optometrist" ? "Optometrista" : "Ortoptista"}
-        </h2>
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+        <h1>Remisiones</h1>
         <button
-          className="btn-primary"
+          className="btn btn-primary"
           onClick={() => navigate("/specialist/referrals/new")}
+          style={{ padding: "8px 12px", fontSize: "0.9rem" }}
         >
           ➕ Nueva remisión
         </button>
       </div>
 
-      <div className="table-card">
-        <h3>Historial de remisiones</h3>
+      <div className="card">
 
         {loading ? (
           <p>Cargando...</p>
         ) : referrals.length === 0 ? (
           <p>No hay remisiones registradas.</p>
         ) : (
-          <table className="data-table">
+          <table className="exams-table">
             <thead>
               <tr>
                 <th>Paciente</th>

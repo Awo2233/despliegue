@@ -1,15 +1,33 @@
 .layout-container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
 }
 
 /* Main content */
 .layout-content {
   flex: 1;
-  padding: 32px;
+  padding: 28px 28px 36px 28px;
   overflow-y: auto;
-  background: #f6f8fc;
-  margin-left: 240px; /* 💡 deja espacio para el sidebar fijo */
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.28s ease, padding 0.2s ease;
+  margin-left: var(--sidebar-width); /* espacio para el sidebar fijo */
+  background: transparent; /* background moved to global */
+  display: block;
 }
+
+/* Center the page container inside the layout content so forms appear centered in viewport */
+.layout-content .page-container,
+.layout-content .container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-right: 24px;
+}
+
+/* Cuando la pantalla es pequeña el sidebar se oculta y el layout toma todo el ancho */
+@media (max-width: 768px) {
+  .layout-content { margin-left: 0; padding: 18px; }
+}
+
+/* Content container helper */
+.page-container { max-width: var(--container-max); margin: 0 auto; }

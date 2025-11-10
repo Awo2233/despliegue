@@ -53,25 +53,33 @@ export default function AdminReferrals() {
   };
 
   return (
-    <div className="referrals-container">
-      <h2 className="section-title">Remisiones registradas</h2>
-
-      <div className="filter-bar">
-        <input
-          type="text"
-          placeholder="Buscar por paciente, especialista o motivo..."
-          value={search}
-          onChange={handleSearch}
-        />
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+        <h1>Remisiones</h1>
       </div>
 
-      <div className="table-card">
+      <input
+        type="text"
+        placeholder="Buscar por paciente, especialista o motivo..."
+        value={search}
+        onChange={handleSearch}
+        style={{
+          marginBottom: "1rem",
+          padding: "8px 12px",
+          width: "100%",
+          maxWidth: "400px",
+          borderRadius: "var(--radius-sm)",
+          border: "1px solid rgba(0,72,255,0.1)",
+        }}
+      />
+
+      <div className="card">
         {loading ? (
           <p>Cargando...</p>
         ) : filtered.length === 0 ? (
           <p>No hay remisiones registradas.</p>
         ) : (
-          <table className="data-table">
+          <table className="exams-table">
             <thead>
               <tr>
                 <th>Paciente</th>

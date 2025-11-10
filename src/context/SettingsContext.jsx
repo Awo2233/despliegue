@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-
-const SettingsContext = createContext();
+/* @refresh reset */
+import React, { useEffect, useState } from "react";
+import { SettingsContext } from "./settingsContextObject";
 
 export function SettingsProvider({ children }) {
   const [fontSize, setFontSize] = useState(() => localStorage.getItem("optica:fontSize") || "medium");
@@ -14,8 +14,16 @@ export function SettingsProvider({ children }) {
 
   useEffect(() => {
     localStorage.setItem("optica:darkMode", darkMode);
-    document.body.style.backgroundColor = darkMode ? "#121212" : "#ffffff";
-    document.body.style.color = darkMode ? "#f0f0f0" : "#000000";
+    // Apply dark-mode class so global CSS selectors can react, and keep inline fallbacks
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+      document.body.style.backgroundColor = "#121212";
+      document.body.style.color = "#f0f0f0";
+    } else {
+      document.body.classList.remove("dark-mode");
+      document.body.style.backgroundColor = "#ffffff";
+      document.body.style.color = "#000000";
+    }
     document.body.style.transition = "all 0.3s ease";
   }, [darkMode]);
 
@@ -47,6 +55,6 @@ export function SettingsProvider({ children }) {
   );
 }
 
-export function useSettings() {
-  return useContext(SettingsContext);
-}
+// `useSettings` is provided from a separate file to keep this module
+// focused on the provider component and to avoid fast-refresh HMR
+// incompatibilities when exporting both components and non-components.

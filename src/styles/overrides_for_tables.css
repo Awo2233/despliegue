@@ -1,0 +1,58 @@
+/* Responsive table wrapper for wide tables (Exams, Appointments) */
+.table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.exams-table, .data-table { width: 100%; border-collapse: collapse; table-layout: auto; }
+.exams-table th, .data-table th, .exams-table td, .data-table td { padding: 8px 10px; vertical-align: middle; font-size: 0.9rem; }
+.exams-table th, .data-table th { background: rgba(0,72,255,0.05); color: var(--text); font-weight: 600; border-bottom: 2px solid rgba(0,72,255,0.1); }
+.exams-table td, .data-table td { border-bottom: 1px solid rgba(0,0,0,0.04); color: var(--text); word-break: break-word; vertical-align: middle; }
+
+/* Ensure action column contents don't overflow layout */
+.exams-table td .actions { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+
+/* Ensure all cells in table rows are middle-aligned */
+.exams-table tbody tr { vertical-align: middle; }
+.exams-table tbody td { vertical-align: middle; }
+
+/* Make file input smaller and compact */
+.exams-table input[type="file"] { padding: 4px 6px; font-size: 0.85rem; max-width: 140px; }
+
+
+/* Compact buttons in table */
+.exams-table .edit-btn, .exams-table .delete-btn, .exams-table .save-btn, .exams-table .cancel-btn { 
+  display: inline-block;
+  padding: 4px 8px; 
+  font-size: 0.75rem; 
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.exams-table .edit-btn { background: linear-gradient(135deg, #4ECDC4, #44A08D); color: white; }
+.exams-table .edit-btn:hover { transform: scale(1.05); }
+
+.exams-table .delete-btn { background: linear-gradient(135deg, #FF6B6B, #D63031); color: white; }
+.exams-table .delete-btn:hover { transform: scale(1.05); }
+
+.exams-table .save-btn { background: linear-gradient(135deg, #00B894, #27AE60); color: white; }
+.exams-table .save-btn:hover { transform: scale(1.05); }
+
+.exams-table .cancel-btn { background: #D4D4D4; color: #333; }
+.exams-table .cancel-btn:hover { transform: scale(1.05); }
+
+/* Status button sizing */
+.status-btn { padding: 4px 8px; font-size: 0.85rem; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; }
+
+/* If the table is wider than the container, allow horizontal scroll and keep header visible */
+.table-responsive::-webkit-scrollbar { height: 10px; }
+.table-responsive::-webkit-scrollbar-thumb { background: rgba(15,23,42,0.08); border-radius: 8px; }
+
+/* Small screens: make table rows stack for readability */
+@media (max-width: 720px) {
+  .exams-table, .data-table { display: block; }
+  .exams-table thead, .data-table thead { display: none; }
+  .exams-table tbody tr, .data-table tbody tr { display: block; margin-bottom: 12px; background: var(--surface); padding: 12px; border-radius: 8px; }
+  .exams-table tbody td, .data-table tbody td { display: block; width: 100%; padding: 6px 0; border-bottom: none; }
+}

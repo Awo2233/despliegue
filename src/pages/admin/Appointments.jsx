@@ -44,22 +44,16 @@ export default function AdminAppointments() {
 
   return (
     <div>
-      <h2 style={{ fontSize: "1.8rem", marginBottom: "1rem" }}>Gestión de Citas</h2>
-
-      <button
-        onClick={() => navigate("/admin/new-appointment")}
-        style={{
-          background: "#007bff",
-          color: "white",
-          border: "none",
-          padding: "10px 16px",
-          borderRadius: "8px",
-          cursor: "pointer",
-          marginBottom: "1.5rem",
-        }}
-      >
-        + Agendar nueva cita
-      </button>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+        <h1>Gestión de Citas</h1>
+        <button
+          onClick={() => navigate("/admin/new-appointment")}
+          className="btn btn-primary"
+          style={{ padding: "8px 12px", fontSize: "0.9rem" }}
+        >
+          ➕ Nueva cita
+        </button>
+      </div>
 
       <input
         type="text"
@@ -68,23 +62,23 @@ export default function AdminAppointments() {
         onChange={(e) => setFilter(e.target.value)}
         style={{
           marginBottom: "1rem",
-          padding: "8px",
+          padding: "8px 12px",
           width: "100%",
           maxWidth: "400px",
-          borderRadius: "6px",
-          border: "1px solid #ccc",
+          borderRadius: "var(--radius-sm)",
+          border: "1px solid rgba(0,72,255,0.1)",
         }}
       />
 
-      <div style={{ background: "white", padding: "1.5rem", borderRadius: "12px" }}>
+      <div className="card">
         {loading ? (
           <p>Cargando...</p>
         ) : filteredAppointments.length === 0 ? (
           <p>No hay citas.</p>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <table className="exams-table">
             <thead>
-              <tr style={{ background: "#f0f4ff", textAlign: "left" }}>
+              <tr style={{ textAlign: "left" }}>
                 <th>Fecha</th>
                 <th>Paciente</th>
                 <th>Especialista</th>

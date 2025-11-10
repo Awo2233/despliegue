@@ -51,6 +51,9 @@ export default function SignIn() {
   return (
     <div className="auth-container">
       <h2>Iniciar Sesión</h2>
+      <p style={{ marginBottom: "20px", color: "var(--muted)", fontSize: "0.95rem", textAlign: "center", maxWidth: "420px" }}>
+        Bienvenido de vuelta. Inicia sesión con tu correo y contraseña.
+      </p>
       <form onSubmit={handleSignIn}>
         <input
           type="email"

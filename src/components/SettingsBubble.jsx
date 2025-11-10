@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Settings } from "lucide-react";
-import { useSettings } from "../context/SettingsContext";
+import { useSettings } from "../context/useSettings";
 import { useVoiceAssist } from "../hooks/VoiceAssistContext";
 
 
@@ -16,8 +16,14 @@ export default function SettingsBubble() {
 
   const [open, setOpen] = useState(false);
 
-  // Activar el asistente de voz solo si está habilitado
-  useVoiceAssist(voiceAssist);
+  // Obtener control del asistente de voz desde el provider
+  const { setActive: setVoiceActive } = useVoiceAssist();
+
+  // Sincronizar el estado global de ajustes (localStorage) con el provider de voz
+  // Cuando `voiceAssist` (del SettingsContext) cambie, activar/desactivar el provider
+  React.useEffect(() => {
+    setVoiceActive(Boolean(voiceAssist));
+  }, [voiceAssist, setVoiceActive]);
 
   return (
     <div
@@ -89,7 +95,11 @@ export default function SettingsBubble() {
               <input
                 type="checkbox"
                 checked={voiceAssist}
-                onChange={(e) => setVoiceAssist(e.target.checked)}
+                onChange={(e) => {
+                  const v = Boolean(e.target.checked);
+                  setVoiceAssist(v); // persist in settings/localStorage
+                  setVoiceActive(v); // enable/disable provider immediately
+                }}
                 style={{ marginLeft: "8px", cursor: "pointer" }}
               />
             </label>

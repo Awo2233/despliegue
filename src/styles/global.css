@@ -1,768 +1,634 @@
-/* 🌤️ global.css — versión clara con tonos azules */
+/* ==================================================================
+   global.css — variables, tipografía y sistema visual moderno
+   Cambios: solo estilos. No modifica JS/HTML.
+   - Variables CSS para paleta y tamaños
+   - Tipografía, espaciado, cards, botones y formularios
+   - Mejora de accesibilidad y responsive
+   ================================================================== */
 
-/* Reset general */
-* {
-  margin: 0;
-  padding: 0;
+:root {
+  /* Paleta (proporcionada por el usuario) */
+  --color-50: #E6EDFF;
+  --color-100: #B8CCFF;
+  --color-200: #8AABFF;
+  --color-300: #4D7FFF;
+  --color-400: #2E69FF;
+  --color-500: #0048FF;
+  --color-600: #003BD1;
+  --color-700: #002EA3;
+  --color-800: #002175;
+  --color-900: #001447;
+  --color-950: #00071A;
+
+  /* Alias para compatibilidad con estilos previos */
+  --bg-1: var(--color-50);
+  --bg-2: var(--color-100);
+  --surface: #ffffff;
+  --muted: #6b7280;
+  --text: #0f172a;
+  --accent: var(--color-500);
+  --accent-600: var(--color-600);
+  --success: #16a34a;
+  --warning: #f59e0b;
+  --danger: #dc2626;
+
+  /* Layout */
+  --container-max: 1100px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --gap: 16px;
+
+  /* Typography */
+  --fs-base: 16px;
+  --fs-lg: 18px;
+  --fs-sm: 14px;
+  --sidebar-width: 240px;
+}
+
+/* Reset sensible */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+html, body, #root {
+  height: 100%;
+}
+
 body {
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #f5f9ff, #dfefff);
-  color: #1a1a1a;
-  text-align: center;
-  min-height: 100vh;
-  overflow-x: hidden;
+  margin: 0;
+  font-family: Inter, Poppins, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-size: var(--fs-base);
+  line-height: 1.45;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--bg-1), var(--bg-2));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ==== DASHBOARD ==== */
-.dashboard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  gap: 20px;
-  padding: 20px;
+/* Container utility */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-/* ==== BOTONES ==== */
+/* Headings */
+h1, h2, h3, h4 {
+  color: var(--text);
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+h1 { font-size: 1.8rem; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.125rem; }
+
+/* Links */
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Buttons — base */
 button {
-  background-color: #0077ff;
+  font-family: inherit;
+  font-size: var(--fs-base);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
   border: none;
-  padding: 12px 22px;
-  color: #fff;
-  font-size: 16px;
-  border-radius: 10px;
   cursor: pointer;
-  font-weight: 500;
-  box-shadow: 0 4px 10px rgba(0, 119, 255, 0.3);
-  transition: all 0.25s ease;
+  transition: transform .14s ease, box-shadow .14s ease, background-color .14s ease;
 }
 
-button:hover {
-  background-color: #3399ff;
-  transform: translateY(-2px);
-}
-
-/* Botón de cierre de sesión */
-.logout-btn {
-  background-color: #e63946;
-  color: #fff;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  box-shadow: 0 4px 10px rgba(230, 57, 70, 0.25);
-  transition: all 0.25s ease;
-}
-
-.logout-btn:hover {
-  background-color: #c71c2f;
-  transform: translateY(-2px);
-}
-
-/* ==== PANELES ==== */
-.admin-panel {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 25px;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  text-align: left;
-}
-
-/* Encabezado del panel */
-.admin-header {
-  display: flex;
-  justify-content: space-between;
+.btn {
+  display: inline-flex;
   align-items: center;
-  margin-bottom: 25px;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 10px;
-}
-
-/* ==== TABLAS ==== */
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  font-size: 15px;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.admin-table th,
-.admin-table td {
-  border: 1px solid #e2e8f0;
-  padding: 12px 15px;
-  text-align: left;
-}
-
-.admin-table th {
-  background-color: #e8f3ff;
-  color: #004aad;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 14px;
-}
-
-.admin-table tr:nth-child(even) {
-  background-color: #f9fcff;
-}
-
-.admin-table tr:hover {
-  background-color: #d9ecff;
-  transition: background 0.2s ease;
-}
-
-/* ==== BOTONES DE ACCIÓN ==== */
-.edit-btn,
-.save-btn {
-  background-color: #0077ff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  color: white;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.25s ease, transform 0.2s ease;
-}
-
-.edit-btn:hover,
-.save-btn:hover {
-  background-color: #005fcc;
-  transform: translateY(-1px);
-}
-
-/* ==== SCROLL PERSONALIZADO ==== */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #f0f4ff;
-}
-::-webkit-scrollbar-thumb {
-  background: #0077ff;
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #3399ff;
-}
-
-.card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.exams-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.exams-table th {
-  background: #f0f4ff;
-  text-align: left;
-  padding: 8px;
-}
-
-.exams-table td {
-  padding: 8px;
-  border-bottom: 1px solid #eee;
-  vertical-align: top;
-}
-
-/* Botones de estado */
-.status-btn {
-  border: none;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.status-btn.done {
-  background: #28a745;
-  color: white;
-}
-
-.status-btn.pending {
-  background: #ffc107;
-  color: #333;
-}
-
-/* Botones acción */
-.edit-btn,
-.save-btn,
-.cancel-btn {
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.edit-btn {
-  background: #007bff;
-  color: white;
-}
-
-.save-btn {
-  background: #17a2b8;
-  color: white;
-}
-
-.cancel-btn {
-  background: #6c757d;
-  color: white;
-}
-
-.edit-btn:hover,
-.save-btn:hover,
-.cancel-btn:hover,
-.status-btn:hover {
-  opacity: 0.8;
-}
-
-select {
-  border: 1px solid #ccc;
-  background-color: #fff;
-  cursor: pointer;
-}
-
-/* --- ESTILOS PARA LA TABLA DE EXÁMENES --- */
-
-.exams-container {
-  padding: 2rem;
-}
-
-.exams-title {
-  font-size: 1.8rem;
-  margin-bottom: 1.2rem;
-  font-weight: 600;
-  color: #1d3557;
-}
-
-.exams-card {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 14px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-  overflow-x: auto;
-}
-
-.exams-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.exams-table th {
-  background: #e9f0ff;
-  color: #1d3557;
-  font-weight: 600;
-  padding: 12px;
-  text-align: left;
-  font-size: 0.95rem;
-}
-
-.exams-table td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-  font-size: 0.93rem;
-}
-
-.exams-table tr:hover {
-  background-color: #f8fbff;
-}
-
-.status-badge {
-  padding: 6px 10px;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-.status-badge.done {
-  background-color: #d4f8e8;
-  color: #1b7a3f;
-}
-
-.status-badge.pending {
-  background-color: #ffe8cc;
-  color: #c56b1f;
-}
-
-.view-link {
-  color: #2563eb;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.view-link:hover {
-  text-decoration: underline;
-}
-
-.no-file {
-  color: #888;
-}
-
-.loading-text,
-.no-exams {
-  text-align: center;
-  color: #666;
-  font-size: 1rem;
-  padding: 1rem 0;
-}
-
-/* === Remisiones (Specialist) === */
-
-.referrals-container {
-  padding: 1rem;
-}
-
-.section-title {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  color: #222;
-}
-
-.form-card,
-.table-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  margin-bottom: 2rem;
-  max-width: 700px;
-}
-
-.form-card label {
-  display: block;
-  margin-top: 0.8rem;
-  font-weight: 500;
-}
-
-.form-card select,
-.form-card textarea {
-  width: 100%;
-  margin-top: 0.4rem;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.form-card textarea {
-  resize: vertical;
+  gap: 8px;
 }
 
 .btn-primary {
-  background: #007bff;
+  background: linear-gradient(180deg, var(--accent), var(--accent-600));
   color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: background 0.2s;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.12);
+}
+.btn-primary:hover { transform: translateY(-2px); }
+
+.btn-ghost {
+  background: transparent; color: var(--accent); border: 1px solid rgba(37,99,235,0.12);
 }
 
-.btn-primary:hover {
-  background: #005fcc;
+.btn-danger { background: var(--danger); color: white; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: 0 6px 18px rgba(9,30,66,0.04);
 }
 
-/* Tabla */
-.data-table {
+/* Forms */
+input, select, textarea {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e6eefc;
+  background: #fff;
+  color: var(--text);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.08);
+  border-color: var(--accent);
+}
+
+/* Tables (cleaner look) */
+table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
+}
+th, td { padding: 10px 12px; text-align: left; }
+th { background: rgba(37,99,235,0.06); color: var(--text); font-weight: 600; }
+tr:nth-child(even) { background: rgba(15,23,42,0.02); }
+
+/* Badges */
+.status-badge { display: inline-block; padding: 6px 10px; border-radius: 999px; font-weight: 600; font-size: .85rem; }
+.status-badge.done { background: #e6ffef; color: var(--success); }
+.status-badge.pending { background: #fff7e6; color: var(--warning); }
+
+/* Sidebar / Layout helpers keep compatibility with existing classes */
+.layout-content { background: transparent; }
+
+/* Scrollbar (subtle) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(15,23,42,0.12); border-radius: 10px; }
+
+/* Utility spacing helpers */
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mb-1 { margin-bottom: 8px; }
+.text-muted { color: var(--muted); }
+
+/* Specific page helpers kept from original but tuned */
+.profile-container { display:flex; justify-content:center; padding: 2rem; background: linear-gradient(180deg, var(--bg-1), #ffffff00);} 
+.profile-card { max-width: 680px; width:100%; }
+
+/* Dark mode support — comprehensive rules
+   When `body.dark-mode` is present, force dark backgrounds and light text
+   across the main UI elements: cards, tables, inputs, sidebar, buttons, links.
+*/
+body.dark-mode {
+  background: var(--color-950);
+  color: #e6eef8;
 }
 
-.data-table th {
-  background: #f0f4ff;
-  text-align: left;
-  padding: 10px;
+/* Surface elements (cards, panels) */
+body.dark-mode .card,
+body.dark-mode .table-card,
+body.dark-mode .form-card,
+body.dark-mode .user-form,
+body.dark-mode .profile-card,
+body.dark-mode .users-list {
+  background: #0f1724; /* dark surface */
+  color: #e6eef8;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
 }
 
-.data-table td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+/* Text and headings */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode p,
+body.dark-mode label,
+body.dark-mode td,
+body.dark-mode th,
+body.dark-mode a,
+body.dark-mode span,
+body.dark-mode strong,
+body.dark-mode li {
+  color: #e6eef8 !important;
 }
 
-/* === Remisiones (Patient) === */
-
-.referrals-container {
-  padding: 1rem;
+/* Tables */
+body.dark-mode .exams-table th,
+body.dark-mode .data-table th {
+  background: rgba(0,72,255,0.08);
+  color: #e6eef8;
+  border-bottom-color: rgba(255,255,255,0.06);
 }
 
-.section-title {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  color: #222;
+body.dark-mode .exams-table td,
+body.dark-mode .data-table td {
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  color: #e6eef8;
 }
 
-.table-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  margin-top: 1rem;
-  max-width: 700px;
+body.dark-mode .exams-table tbody tr:hover,
+body.dark-mode .data-table tbody tr:hover {
+  background: rgba(255,255,255,0.02);
 }
 
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
+/* Inputs, selects, textarea */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #0b1220;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #e6eef8;
 }
 
-.data-table th {
-  background: #f0f4ff;
-  text-align: left;
-  padding: 10px;
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: rgba(230,238,248,0.6);
 }
 
-.data-table td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.table-card p {
-  text-align: center;
-  color: #666;
-  font-style: italic;
-  margin: 1rem 0;
-}
-
-/* === Remisiones (Admin) === */
-
-.filter-bar {
-  margin-bottom: 1rem;
-  max-width: 700px;
-}
-
-.filter-bar input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s ease;
-}
-
-.filter-bar input:focus {
-  border-color: #4c7df0;
-  box-shadow: 0 0 0 2px rgba(76, 125, 240, 0.15);
-}
-
-.admin-users-container {
-  display: flex;
-  gap: 2rem;
-  margin-top: 1.5rem;
-}
-
-.users-list {
-  flex: 1;
-  background: #f9fafb;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-}
-
-.users-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.users-list li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  background: #fff;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.users-list li:hover {
-  background: #e6f0ff;
-}
-
-.users-list li.selected {
-  background: #dbeafe;
-  font-weight: 600;
-}
-
-.btn-delete {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 18px;
-  color: #dc2626;
-  transition: transform 0.2s;
-}
-
-.btn-delete:hover {
-  transform: scale(1.1);
-}
-
-.user-form {
-  flex: 2;
-  background: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-}
-
-.user-form form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.user-form label {
-  font-weight: 500;
-  color: #374151;
-}
-
-.user-form input,
-.user-form select,
-.user-form textarea {
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  font-size: 14px;
-  transition: border-color 0.2s;
-}
-
-.user-form input:focus,
-.user-form select:focus,
-.user-form textarea:focus {
-  border-color: #3b82f6;
-  outline: none;
-}
-
-.btn-save {
-  margin-top: 1rem;
-  background: #2563eb;
+/* Buttons */
+body.dark-mode .btn-primary {
+  background: linear-gradient(180deg, var(--color-500), var(--color-600));
   color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
+  box-shadow: 0 10px 30px rgba(0,72,255,0.18);
 }
 
-.btn-save:hover {
-  background: #1d4ed8;
-}
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
+body.dark-mode .btn-ghost {
+  background: transparent;
+  color: var(--color-100);
+  border-color: rgba(255,255,255,0.06);
 }
 
-.btn-cancel {
-  background: #6b7280;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
+/* Sidebar adjustments if not already dark */
+body.dark-mode .sidebar {
+  background: linear-gradient(180deg, var(--color-700), var(--color-800));
+  color: #ffffff;
+}
+body.dark-mode .sidebar .sidebar-link,
+body.dark-mode .sidebar .sidebar-menu li {
+  color: #e6eef8;
 }
 
-.btn-cancel:hover {
-  background: #4b5563;
+/* Small UI elements */
+body.dark-mode .status-badge.pending { background: rgba(255,255,255,0.05); color: #ffeaa7; }
+body.dark-mode .status-badge.done { background: rgba(255,255,255,0.04); color: #8ef7b6; }
+
+/* Ensure floating controls remain visible */
+body.dark-mode button[aria-label="Abrir ajustes"],
+body.dark-mode .logout-btn {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  :root { --container-max: 900px; }
+  h1 { font-size: 1.4rem; }
+}
+
+/* Keep legacy class names but ensure modern visuals */
+.admin-panel { max-width: var(--container-max); margin: 28px auto; padding: 20px; border-radius: var(--radius-md); }
+
+/* ===========================
+   Uniform section styles across all pages (Exams, Appointments, Referrals, Users)
+   =========================== */
+
+/* Unified table styling across all pages */
+.exams-table,
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.exams-table th,
+.data-table th {
+  background: rgba(0,72,255,0.05);
+  color: var(--text);
+  font-weight: 600;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 2px solid rgba(0,72,255,0.1);
+}
+
+.exams-table td,
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.exams-table tbody tr:hover,
+.data-table tbody tr:hover {
+  background: rgba(0,72,255,0.02);
+}
+
+/* Two-column layout for admin users (list + form) */
 .admin-users-container {
   display: flex;
-  gap: 2rem;
-  padding: 20px;
+  gap: 20px;
+  padding: 16px 0;
+}
+
+@media (max-width: 1000px) {
+  .admin-users-container { flex-direction: column; }
 }
 
 .users-list {
-  flex: 1;
-  background: #fff;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  flex: 0 0 280px;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(9,30,66,0.05);
+  max-height: 600px;
+  overflow-y: auto;
 }
 
 .users-list h2 {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  color: #1e3a8a;
-}
-
-.users-list ul {
-  list-style: none;
-  padding: 0;
-}
-
-.users-list li {
-  cursor: pointer;
-  background: #f3f4f6;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background 0.2s;
-}
-
-.users-list li:hover {
-  background: #e0e7ff;
-}
-
-.users-list li.selected {
-  background: #c7d2fe;
-  font-weight: 600;
+  font-size: 1rem;
+  margin: 0 0 12px 0;
+  color: var(--accent-600);
 }
 
 .user-form {
-  flex: 2;
-  background: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  flex: 1;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(9,30,66,0.05);
 }
 
 .user-form h2 {
-  color: #1e3a8a;
-  margin-bottom: 1rem;
+  font-size: 1rem;
+  margin: 0 0 12px 0;
+  color: var(--accent-600);
 }
 
-.user-form label {
-  display: block;
-  margin-top: 10px;
-  font-weight: 500;
+/* ===========================
+   Auth Pages (SignIn, SignUp) — Modern Card Design
+   =========================== */
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--color-50) 0%, var(--color-100) 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
-.user-form input,
-.user-form select,
-.user-form textarea {
+/* Decorative blobs/shapes (optional CSS-only design accent) */
+.auth-container::before,
+.auth-container::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  z-index: 0;
+}
+
+.auth-container::before {
+  width: 400px;
+  height: 400px;
+  background: var(--color-500);
+  top: -100px;
+  right: -100px;
+}
+
+.auth-container::after {
+  width: 300px;
+  height: 300px;
+  background: var(--color-600);
+  bottom: -80px;
+  left: -80px;
+}
+
+.auth-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  color: var(--text);
+  position: relative;
+  z-index: 1;
+}
+
+.auth-container form {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  box-shadow: 0 20px 60px rgba(2,16,38,0.15);
   width: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  margin-top: 4px;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
 }
 
-.btn-save {
-  margin-top: 15px;
-  background-color: #2563eb;
+.auth-container input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0,72,255,0.1);
+  background: #fafbfc;
+  color: var(--text);
+  font-size: var(--fs-base);
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.auth-container input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(0,72,255,0.08);
+}
+
+.auth-container input::placeholder {
+  color: rgba(15,23,42,0.5);
+}
+
+.auth-container button {
+  background: linear-gradient(180deg, var(--color-500), var(--color-600));
   color: white;
-  padding: 10px 14px;
   border: none;
-  border-radius: 8px;
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,72,255,0.2);
+  transition: transform .18s ease, box-shadow .18s ease;
+  margin-top: 8px;
 }
 
-.btn-save:hover {
-  background-color: #1d4ed8;
+.auth-container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(0,72,255,0.3);
 }
 
-.profile-container {
+.auth-container button:active {
+  transform: translateY(0);
+}
+
+.auth-container .register-link {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--muted);
+  position: relative;
+  z-index: 1;
+}
+
+.auth-container .link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-container .link:hover {
+  text-decoration: underline;
+}
+
+/* Dark mode overrides for auth pages (SignIn / SignUp) */
+body.dark-mode .auth-container {
+  background: linear-gradient(180deg, #071021 0%, #071826 100%);
+}
+
+body.dark-mode .auth-container h2 { color: #e6eef8; }
+
+body.dark-mode .auth-container form {
+  background: #0b1220;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+
+body.dark-mode .auth-container input {
+  background: #071021;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #e6eef8;
+}
+
+body.dark-mode .auth-container input::placeholder { color: rgba(230,238,248,0.5); }
+
+body.dark-mode .auth-container button {
+  background: linear-gradient(180deg, var(--color-500), var(--color-600));
+  color: #fff;
+}
+
+body.dark-mode .auth-container .register-link { color: rgba(230,238,248,0.8); }
+
+/* ===========================
+   Form layout & cosmetics
+   Center forms, improve spacing, labels and responsive grid
+   =========================== */
+.form-container,
+.form-wrapper {
   display: flex;
   justify-content: center;
-  padding: 2rem;
-  background: #f9fafb;
-  min-height: 100vh;
+  align-items: flex-start;
+  padding: 18px 12px;
 }
 
-.profile-card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 2rem;
+.form-card,
+.table-card,
+.user-form,
+.profile-card,
+.form-card-small {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(9,30,66,0.05);
   width: 100%;
-  max-width: 600px;
+  max-width: 780px;
+  margin: 12px auto;
 }
 
-.profile-card h2 {
-  text-align: center;
-  color: #1e3a8a;
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
+.form-card h2,
+.user-form h2 {
+  margin-bottom: 12px;
+  color: var(--accent-600);
 }
 
-.profile-info {
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+
+/* single column on small screens */
+@media (max-width: 720px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+.form-row {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 8px;
 }
 
-.info-group {
+.form-row label,
+.form-card label {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea,
+.form-card input,
+.form-card select,
+.form-card textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(15,23,42,0.06);
+  background: #fff;
+}
+
+.form-actions {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  align-items: center;
 }
 
-.info-group label {
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 4px;
+.form-centered {
+  display:flex; justify-content:center; align-items:center; gap:12px;
 }
 
-.info-group p {
-  background: #f3f4f6;
-  padding: 10px;
-  border-radius: 8px;
-  margin: 0;
+/* Small helper for form footers */
+.form-help { color: var(--muted); font-size: 0.9rem; margin-top: 8px; }
+
+/* Improve button sizes inside forms */
+.form-card .btn, .user-form .btn { padding: 10px 14px; }
+
+/* Ensure form cards are centered within layout-content regardless of parent wrappers */
+.layout-content .form-card,
+.layout-content .user-form,
+.layout-content .table-card,
+.layout-content .profile-card {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 36px;
+  max-width: 760px;
 }
 
-.observations {
-  background: #fef9c3;
-  border-left: 4px solid #facc15;
+/* Form title and consistent spacing */
+.form-card h2, .user-form h2, .profile-card h2 {
+  font-size: 1.25rem;
+  margin: 0 0 14px 0;
+  color: var(--accent-600);
 }
 
-.loading,
-.error {
-  text-align: center;
-  color: #6b7280;
-  padding: 2rem;
+/* Align primary action to the right and secondary to the left inside .form-actions */
+.form-actions .btn-primary { margin-left: auto; }
+.form-actions .btn-ghost, .form-actions .btn-secondary { margin-right: auto; }
+
+/* Make selects and inputs visually consistent width inside forms */
+.form-card select, .form-card input, .form-card textarea,
+.user-form select, .user-form input, .user-form textarea {
+  width: 100%;
 }
 
-.role-tag {
-  display: inline-block;
-  background-color: #dbeafe;
-  color: #1e40af;
-  font-weight: 600;
-  border-radius: 6px;
-  padding: 6px 10px;
-  text-transform: capitalize;
-}
 
-/* === Modo oscuro === */
-body.dark-mode {
-  background-color: #121212;
-  color: #f0f0f0;
-}
-
-body.dark-mode .card,
-body.dark-mode table,
-body.dark-mode input,
-body.dark-mode textarea,
-body.dark-mode select {
-  background-color: #1e1e1e;
-  color: #f0f0f0;
-  border-color: #444;
-}
-
-body.dark-mode button {
-  background-color: #444;
-  color: white;
-}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../api/supabaseClient";
-import { useNavigate } from "react-router-dom";
+// navigate is not used here; removed to fix linter
 import Sidebar from "../components/Sidebar";
 
 const AdminPanel = () => {
@@ -8,7 +8,6 @@ const AdminPanel = () => {
   const [editingId, setEditingId] = useState(null);
   const [newRole, setNewRole] = useState("");
   const [role, setRole] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProfiles();

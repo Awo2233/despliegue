@@ -116,32 +116,24 @@ export default function AdminExams() {
 
   return (
     <div>
-      <h2 style={{ fontSize: "1.8rem", marginBottom: "1rem" }}>Gestión de Exámenes</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+        <h1>Gestión de Exámenes</h1>
+        <button
+          onClick={() => navigate("/admin/create-exam")}
+          className="btn btn-primary"
+          style={{ padding: "8px 12px", fontSize: "0.9rem" }}
+        >
+          ➕ Nuevo examen
+        </button>
+      </div>
 
-      {/* 🔹 Botón para crear nuevo examen */}
-      <button
-        onClick={() => navigate("/admin/create-exam")}
-        style={{
-          backgroundColor: "#2563eb",
-          color: "white",
-          padding: "10px 16px",
-          borderRadius: "6px",
-          border: "none",
-          cursor: "pointer",
-          marginBottom: "1rem",
-        }}
-      >
-        ➕ Crear nuevo examen
-      </button>
-
-      {/* 🔹 Filtros */}
-      <div style={{ marginBottom: "1rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-        <div>
-          <label style={{ fontWeight: 600, marginRight: "8px" }}>Estado:</label>
+      <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "1rem", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <label style={{ fontWeight: 600, fontSize: "0.9rem" }}>Estado:</label>
           <select
             value={filterState}
             onChange={(e) => setFilterState(e.target.value)}
-            style={{ padding: "6px 10px", borderRadius: "6px" }}
+            style={{ padding: "6px 10px", borderRadius: "var(--radius-sm)", border: "1px solid rgba(0,72,255,0.1)", fontSize: "0.9rem" }}
           >
             <option value="all">Todos</option>
             <option value="pending">Pendientes</option>
@@ -149,12 +141,12 @@ export default function AdminExams() {
           </select>
         </div>
 
-        <div>
-          <label style={{ fontWeight: 600, marginRight: "8px" }}>Especialista:</label>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <label style={{ fontWeight: 600, fontSize: "0.9rem" }}>Especialista:</label>
           <select
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
-            style={{ padding: "6px 10px", borderRadius: "6px" }}
+            style={{ padding: "6px 10px", borderRadius: "var(--radius-sm)", border: "1px solid rgba(0,72,255,0.1)", fontSize: "0.9rem" }}
           >
             <option value="all">Ambos</option>
             <option value="optometrist">Optometrista</option>
@@ -210,8 +202,8 @@ export default function AdminExams() {
                             },
                           })
                         }
-                        rows="3"
-                        style={{ width: "100%", padding: "6px" }}
+                        rows="2"
+                        style={{ width: "100%", padding: "4px", fontSize: "0.85rem" }}
                       />
                     ) : (
                       exam.observations || "—"
@@ -231,7 +223,7 @@ export default function AdminExams() {
                             },
                           })
                         }
-                        style={{ width: "100%", padding: "6px" }}
+                        style={{ width: "100%", padding: "4px", fontSize: "0.85rem" }}
                       />
                     ) : (
                       exam.diagnosis || "—"
@@ -247,28 +239,28 @@ export default function AdminExams() {
                         📄 Ver archivo
                       </a>
                     ) : (
-                      <input type="file" onChange={(e) => uploadFile(exam.id, e.target.files[0])} />
+                      <input type="file" onChange={(e) => uploadFile(exam.id, e.target.files[0])} style={{ padding: "3px", fontSize: "0.8rem", maxWidth: "130px" }} />
                     )}
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
                     {editingExam === exam.id ? (
                       <>
-                        <button className="save-btn" onClick={() => handleSave(exam.id)}>
+                        <button className="save-btn" onClick={() => handleSave(exam.id)} style={{ padding: "4px 8px", fontSize: "0.75rem", whiteSpace: "nowrap", border: "none", borderRadius: "4px", cursor: "pointer", marginRight: "4px", display: "inline-block", verticalAlign: "middle" }}>
                           💾 Guardar
                         </button>
-                        <button className="cancel-btn" onClick={() => setEditingExam(null)}>
+                        <button className="cancel-btn" onClick={() => setEditingExam(null)} style={{ padding: "4px 8px", fontSize: "0.75rem", whiteSpace: "nowrap", border: "none", borderRadius: "4px", cursor: "pointer", display: "inline-block", verticalAlign: "middle" }}>
                           ✖ Cancelar
                         </button>
                       </>
                     ) : (
                       <>
-                        <button className="edit-btn" onClick={() => setEditingExam(exam.id)}>
+                        <button className="edit-btn" onClick={() => setEditingExam(exam.id)} style={{ padding: "4px 8px", fontSize: "0.75rem", whiteSpace: "nowrap", border: "none", borderRadius: "4px", cursor: "pointer", marginRight: "4px", display: "inline-block", verticalAlign: "middle" }}>
                           ✏️ Editar
                         </button>
                         <button
                           className="delete-btn"
                           onClick={() => deleteExam(exam.id)}
-                          style={{ marginLeft: "6px" }}
+                          style={{ padding: "4px 8px", fontSize: "0.75rem", whiteSpace: "nowrap", border: "none", borderRadius: "4px", cursor: "pointer", display: "inline-block", verticalAlign: "middle" }}
                         >
                           🗑 Eliminar
                         </button>

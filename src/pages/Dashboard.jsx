@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../api/supabaseClient";
-import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
 const Dashboard = () => {
   const [profile, setProfile] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {

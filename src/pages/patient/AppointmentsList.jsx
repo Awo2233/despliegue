@@ -68,52 +68,26 @@ export default function AppointmentsList() {
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <h2 style={{ fontSize: "1.8rem" }}>Mis Citas</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+        <h1>Mis Citas</h1>
         <button
           onClick={() => navigate("/patient/new-appointment")}
-          style={{
-            background: "#007bff",
-            color: "white",
-            border: "none",
-            padding: "10px 16px",
-            borderRadius: "8px",
-            cursor: "pointer",
-          }}
+          className="btn btn-primary"
+          style={{ padding: "8px 12px", fontSize: "0.9rem" }}
         >
-          + Agendar nueva cita
+          ➕ Nueva cita
         </button>
       </div>
 
-      <div
-        style={{
-          background: "white",
-          padding: "1.5rem",
-          borderRadius: "12px",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
-        }}
-      >
+      <div className="card">
         {loading ? (
           <p>Cargando...</p>
         ) : appointments.length === 0 ? (
           <p>No tienes citas registradas.</p>
         ) : (
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              marginTop: "1rem",
-            }}
-          >
+          <table className="exams-table">
             <thead>
-              <tr style={{ background: "#f0f4ff", textAlign: "left" }}>
+              <tr style={{ textAlign: "left" }}>
                 <th>Fecha</th>
                 <th>Especialista</th>
                 <th>Estado</th>
