@@ -30,6 +30,20 @@ export default function CreateExamForm() {
       return;
     }
 
+    const selectedDate = new Date(newExam.scheduled_at);
+    const now = new Date();
+
+    if (selectedDate < now) {
+      alert("No puedes seleccionar una fecha anterior a la actual.");
+      return;
+    }
+
+    const hour = selectedDate.getHours();
+    if (hour < 8 || hour >= 16) {
+      alert("Solo puedes programar exámenes entre 8:00 a.m. y 4:00 p.m.");
+      return;
+    }
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -48,7 +62,7 @@ export default function CreateExamForm() {
       console.error(error);
       alert("Error al crear examen");
     } else {
-      alert("Examen creado correctamente");
+      alert("✅ Examen creado correctamente");
       setNewExam({
         patient_id: "",
         scheduled_at: "",
@@ -65,10 +79,13 @@ export default function CreateExamForm() {
       style={{ marginBottom: "2rem", maxWidth: 700 }}
     >
       <h3>Crear nuevo examen</h3>
+
       <label>Paciente:</label>
       <select
         value={newExam.patient_id}
-        onChange={(e) => setNewExam({ ...newExam, patient_id: e.target.value })}
+        onChange={(e) =>
+          setNewExam({ ...newExam, patient_id: e.target.value })
+        }
         style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
       >
         <option value="">-- Selecciona paciente --</option>
@@ -82,7 +99,9 @@ export default function CreateExamForm() {
       <label>Especialista:</label>
       <select
         value={newExam.specialist_role}
-        onChange={(e) => setNewExam({ ...newExam, specialist_role: e.target.value })}
+        onChange={(e) =>
+          setNewExam({ ...newExam, specialist_role: e.target.value })
+        }
         style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
       >
         <option value="optometrist">Optometrista</option>
@@ -92,15 +111,20 @@ export default function CreateExamForm() {
       <label>Fecha programada:</label>
       <input
         type="datetime-local"
+        min={new Date().toISOString().slice(0, 16)}
         value={newExam.scheduled_at}
-        onChange={(e) => setNewExam({ ...newExam, scheduled_at: e.target.value })}
+        onChange={(e) =>
+          setNewExam({ ...newExam, scheduled_at: e.target.value })
+        }
         style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
       />
 
       <label>Observaciones iniciales:</label>
       <textarea
         value={newExam.observations}
-        onChange={(e) => setNewExam({ ...newExam, observations: e.target.value })}
+        onChange={(e) =>
+          setNewExam({ ...newExam, observations: e.target.value })
+        }
         rows="3"
         style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
       />

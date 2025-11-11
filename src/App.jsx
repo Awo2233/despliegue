@@ -2,6 +2,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
+import Footer from './components/Footer';
 
 // ⚙️ Ajustes globales
 // SettingsProvider is provided in main.jsx; don't wrap again here
@@ -24,6 +25,8 @@ import AdminNewAppointment from "./pages/admin/AdminNewAppointment"
 import Exams from "./pages/admin/Exams";
 import CreateExamForm from "./pages/admin/CreateExamForm";
 import AdminReferrals from "./pages/admin/Referrals";
+import Reports from "./pages/admin/Reports";
+
 
 // Especialistas pages
 import SpecialistProfile from "./pages/specialist/Profile";
@@ -74,6 +77,7 @@ export default function App() {
                 <Route path="/admin/exams" element={<Exams />} />
                 <Route path="/admin/create-exam" element={<CreateExamForm />} />
                 <Route path="/admin/referrals" element={<AdminReferrals />} />
+                <Route path="/admin/reports" element={<Reports />} />
                 <Route path="*" element={<Navigate to="/admin/users" replace />} />
               </>
             )}
@@ -108,6 +112,8 @@ export default function App() {
           </Route>
         )}
       </Routes>
+     
+      <Footer />
     </BrowserRouter>
 
      <SettingsBubble />

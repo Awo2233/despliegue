@@ -1,4 +1,3 @@
-// src/pages/admin/AdminNewAppointment.jsx
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../api/supabaseClient";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +33,20 @@ export default function AdminNewAppointment() {
     if (!newAppointment.patient_id || !newAppointment.specialist_id || !newAppointment.scheduled_at)
       return alert("Completa todos los campos");
 
+    const selectedDate = new Date(newAppointment.scheduled_at);
+    const now = new Date();
+
+    if (selectedDate < now) {
+      alert("No puedes seleccionar una fecha anterior a la actual.");
+      return;
+    }
+
+    const hour = selectedDate.getHours();
+    if (hour < 8 || hour >= 16) {
+      alert("Solo puedes agendar citas entre 8:00 a.m. y 4:00 p.m.");
+      return;
+    }
+
     const specialist = specialists.find((s) => s.id === newAppointment.specialist_id);
 
     const { error } = await supabase.from("appointments").insert([
@@ -49,7 +62,7 @@ export default function AdminNewAppointment() {
       console.error(error);
       alert("Error al crear cita");
     } else {
-      alert("Cita creada correctamente");
+      alert("✅ Cita creada correctamente");
       navigate("/admin/appointments");
     }
   };
@@ -113,6 +126,7 @@ export default function AdminNewAppointment() {
         <label>Fecha y hora:</label>
         <input
           type="datetime-local"
+          min={new Date().toISOString().slice(0, 16)}
           value={newAppointment.scheduled_at}
           onChange={(e) =>
             setNewAppointment({ ...newAppointment, scheduled_at: e.target.value })

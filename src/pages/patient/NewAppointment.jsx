@@ -10,6 +10,7 @@ export default function NewAppointment() {
     specialist_role: "optometrist",
     scheduled_at: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,21 +22,63 @@ export default function NewAppointment() {
     if (!form.scheduled_at)
       return alert("Por favor selecciona una fecha y hora.");
 
-    const { error } = await supabase.from("appointments").insert([
-      {
-        patient_id: profile.id,
-        specialist_role: form.specialist_role,
-        scheduled_at: form.scheduled_at,
-        created_by: profile.id,
-      },
-    ]);
+    const selectedDate = new Date(form.scheduled_at);
+    const now = new Date();
 
-    if (error) {
-      console.error(error);
-      alert("Error al crear la cita");
-    } else {
-      alert("Cita agendada correctamente");
-      navigate("/patient/appointments"); // volver a la lista
+    // ⛔ No permitir fechas anteriores a la actual
+    if (selectedDate < now) {
+      alert("No puedes seleccionar una fecha anterior a la actual.");
+      return;
+    }
+
+    // 🕗 Validar horario entre 8am y 4pm
+    const hour = selectedDate.getHours();
+    if (hour < 8 || hour >= 16) {
+      alert("Solo puedes agendar citas entre las 8:00 a.m. y las 4:00 p.m.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // 🔍 Verificar si ya hay una cita ocupando esa fecha y hora con ese especialista
+      const { data: existing, error: existingError } = await supabase
+        .from("appointments")
+        .select("id")
+        .eq("scheduled_at", form.scheduled_at)
+        .eq("specialist_role", form.specialist_role)
+        .eq("status", "scheduled");
+
+      if (existingError) throw existingError;
+
+      if (existing.length > 0) {
+        alert(
+          "Esa fecha y hora ya están ocupadas. Por favor selecciona otra."
+        );
+        setLoading(false);
+        return;
+      }
+
+      // 📝 Crear la nueva cita
+      const { error } = await supabase.from("appointments").insert([
+        {
+          patient_id: profile.id,
+          specialist_role: form.specialist_role,
+          scheduled_at: form.scheduled_at,
+          status: "scheduled",
+          created_by: profile.id,
+        },
+      ]);
+
+      if (error) throw error;
+
+      alert("✅ Cita agendada correctamente.");
+      navigate("/patient/appointments");
+    } catch (err) {
+      console.error("Error al crear cita:", err.message);
+      alert("Error al crear la cita: " + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,6 +112,7 @@ export default function NewAppointment() {
           name="scheduled_at"
           value={form.scheduled_at}
           onChange={handleChange}
+          min={new Date().toISOString().slice(0, 16)} // 🔒 Bloquea visualmente fechas pasadas
           style={{
             width: "100%",
             padding: "8px",
@@ -79,6 +123,7 @@ export default function NewAppointment() {
         <div style={{ display: "flex", gap: "1rem" }}>
           <button
             type="submit"
+            disabled={loading}
             style={{
               background: "#007bff",
               color: "white",
@@ -87,9 +132,10 @@ export default function NewAppointment() {
               borderRadius: "8px",
               cursor: "pointer",
               flex: 1,
+              opacity: loading ? 0.7 : 1,
             }}
           >
-            Crear cita
+            {loading ? "Creando..." : "Crear cita"}
           </button>
           <button
             type="button"

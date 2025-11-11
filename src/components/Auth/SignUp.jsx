@@ -75,7 +75,7 @@ export default function SignUp() {
     <div className="auth-container">
       <h2>Registro de Paciente</h2>
       <p style={{ marginBottom: "20px", color: "var(--muted)", fontSize: "0.95rem", textAlign: "center", maxWidth: "420px" }}>
-        Crea tu cuenta para acceder a la plataforma de óptica.
+        Crea tu cuenta para acceder a la plataforma de JBSOptics.
       </p>
       <form onSubmit={handleSignUp}>
         <input

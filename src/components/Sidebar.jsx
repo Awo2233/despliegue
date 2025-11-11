@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../api/supabaseClient";
 import "../styles/Sidebar.css";
+
+
 import {
   FaUser,
   FaCalendarAlt,
@@ -9,6 +11,8 @@ import {
   FaUsersCog,
   FaStethoscope,
   FaSignOutAlt,
+  FaChartBar,
+
 } from "react-icons/fa";
 
 const Sidebar = ({ role }) => {
@@ -27,6 +31,7 @@ const Sidebar = ({ role }) => {
           { label: "Citas", icon: <FaCalendarAlt />, path: "/admin/appointments" },
           { label: "Examenes", icon: <FaFileAlt />, path: "/admin/Exams" },
           { label: "Remisiones", icon: <FaStethoscope />, path: "/admin/referrals" },
+          { label: "Reportes", icon: <FaChartBar />, path: "/admin/reports" },
         ]
       : role === "optometrist" || role === "ortoptist"
       ? [

@@ -32,6 +32,20 @@ export default function SpecialistCreateExamForm() {
       return;
     }
 
+    const selectedDate = new Date(newExam.scheduled_at);
+    const now = new Date();
+
+    if (selectedDate < now) {
+      alert("No puedes seleccionar una fecha anterior a la actual.");
+      return;
+    }
+
+    const hour = selectedDate.getHours();
+    if (hour < 8 || hour >= 16) {
+      alert("Solo puedes programar exámenes entre 8:00 a.m. y 4:00 p.m.");
+      return;
+    }
+
     const { error } = await supabase.from("exams").insert([
       {
         patient_id: newExam.patient_id,
@@ -46,7 +60,7 @@ export default function SpecialistCreateExamForm() {
       console.error(error);
       alert("Error al crear examen");
     } else {
-      alert("Examen creado correctamente");
+      alert("✅ Examen creado correctamente");
       setNewExam({ patient_id: "", scheduled_at: "", observations: "" });
     }
   };
@@ -83,6 +97,7 @@ export default function SpecialistCreateExamForm() {
         <label>Fecha programada:</label>
         <input
           type="datetime-local"
+          min={new Date().toISOString().slice(0, 16)}
           value={newExam.scheduled_at}
           onChange={(e) =>
             setNewExam({ ...newExam, scheduled_at: e.target.value })
