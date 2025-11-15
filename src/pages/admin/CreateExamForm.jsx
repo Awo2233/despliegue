@@ -73,11 +73,12 @@ export default function CreateExamForm() {
   };
 
   return (
-    <form
-      onSubmit={createExam}
-      className="card"
-      style={{ marginBottom: "2rem", maxWidth: 700 }}
-    >
+    <div className="create-exam-wrapper">
+      <form
+        onSubmit={createExam}
+        className="card create-exam-card"
+        style={{ marginBottom: "2rem", maxWidth: 700 }}
+      >
       <h3>Crear nuevo examen</h3>
 
       <label>Paciente:</label>
@@ -132,6 +133,7 @@ export default function CreateExamForm() {
       <button className="save-btn" type="submit">
         ➕ Crear examen
       </button>
-    </form>
+      </form>
+    </div>
   );
 }

@@ -66,7 +66,7 @@ export default function PatientExams() {
             <tbody>
               {exams.map((exam) => (
                 <tr key={exam.id}>
-                  <td>{new Date(exam.created_at).toLocaleString()}</td>
+                  <td>{new Date(exam.created_at).toLocaleString("es-CO", { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</td>
                   <td>
                     {exam.specialist_role === "optometrist"
                       ? "Optometrista"

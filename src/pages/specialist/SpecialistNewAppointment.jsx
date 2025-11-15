@@ -1,57 +1,113 @@
 import React, { useEffect, useState } from "react";
-import { supabase } from "../../api/supabaseClient";
-import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../api/supabaseClient";
 
-export default function SpecialistNewAppointment() {
-  const { profile } = useAuth();
+
+export default function AppointmentsCreate() {
+  const navigate = useNavigate();
+  const [patients, setPatients] = useState([]);
+  const [profile, setProfile] = useState(null);
+
   const [newAppointment, setNewAppointment] = useState({
     patient_id: "",
-    scheduled_at: "",
+    scheduled_date: "",
+    scheduled_time: "",
   });
-  const [patients, setPatients] = useState([]);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchPatients();
-  }, []);
+  // ============================
+  //   🔹 Cargar perfil especialista
+  // ============================
+  const loadProfile = async () => {
+    const user = await supabase.auth.getUser();
+    if (!user.data.user) return;
 
-  const fetchPatients = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("profiles")
-      .select("id, full_name")
-      .eq("role", "patient")
-      .order("full_name", { ascending: true });
-    if (!error) setPatients(data || []);
+      .select("*")
+      .eq("id", user.data.user.id)
+      .single();
+
+    setProfile(data);
   };
 
+  // ============================
+  //   🔹 Cargar pacientes
+  // ============================
+  const loadPatients = async () => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("role", "patient");
+
+    setPatients(data || []);
+  };
+
+  useEffect(() => {
+    loadProfile();
+    loadPatients();
+  }, []);
+
+  // ============================
+  //   🔹 Crear la cita (completo)
+  // ============================
   const createAppointment = async (e) => {
     e.preventDefault();
-    if (!newAppointment.patient_id || !newAppointment.scheduled_at)
-      return alert("Completa todos los campos");
 
-    const selectedDate = new Date(newAppointment.scheduled_at);
+    if (!newAppointment.patient_id || !newAppointment.scheduled_date || !newAppointment.scheduled_time) {
+      alert("Completa todos los campos");
+      return;
+    }
+
+    const selectedDate = new Date(
+      `${newAppointment.scheduled_date}T${newAppointment.scheduled_time}:00`
+    );
     const now = new Date();
 
-    // ⛔ No permitir fechas pasadas
+    // ❌ No permitir fechas pasadas
     if (selectedDate < now) {
       alert("No puedes seleccionar una fecha anterior a la actual.");
       return;
     }
 
-    // 🕓 Validar horario entre 8am y 4pm
+    // ⏰ Validar horario entre 8:00 AM y 4:00 PM
     const hour = selectedDate.getHours();
     if (hour < 8 || hour >= 16) {
       alert("Solo puedes agendar citas entre las 8:00 a.m. y las 4:00 p.m.");
       return;
     }
 
+    const scheduledAtISO = selectedDate.toISOString();
+
+    // ===========================================
+    //   🔍 VALIDAR DISPONIBILIDAD DEL ESPECIALISTA
+    // ===========================================
+    const { data: existing, error: existingError } = await supabase
+      .from("appointments")
+      .select("id")
+      .eq("specialist_id", profile.id)
+      .eq("scheduled_at", scheduledAtISO)
+      .eq("status", "scheduled");
+
+    if (existingError) {
+      console.error(existingError);
+      alert("Error verificando disponibilidad del especialista");
+      return;
+    }
+
+    if (existing && existing.length > 0) {
+      alert("⚠️ El especialista ya tiene una cita en esa fecha y hora.");
+      return;
+    }
+
+    // ============================
+    //   🟢 Insertar cita
+    // ============================
     const { error } = await supabase.from("appointments").insert([
       {
         patient_id: newAppointment.patient_id,
         specialist_id: profile.id,
         specialist_role: profile.role,
-        scheduled_at: newAppointment.scheduled_at,
+        scheduled_at: scheduledAtISO,
         created_by: profile.id,
       },
     ]);
@@ -66,19 +122,11 @@ export default function SpecialistNewAppointment() {
   };
 
   return (
-    <div
-      style={{
-        background: "white",
-        padding: "2rem",
-        borderRadius: "12px",
-        maxWidth: "600px",
-        margin: "2rem auto",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-      }}
-    >
-      <h2 style={{ marginBottom: "1rem" }}>Agendar Nueva Cita</h2>
+    <div className="create-appointment-wrapper">
+      <div className="card create-appointment-card">
+        <h2 style={{ marginBottom: "1rem" }}>Agendar Nueva Cita</h2>
 
-      <form onSubmit={createAppointment}>
+        <form onSubmit={createAppointment}>
         <label>Paciente:</label>
         <select
           value={newAppointment.patient_id}
@@ -87,12 +135,12 @@ export default function SpecialistNewAppointment() {
           }
           style={{
             display: "block",
-            margin: "0.5rem 0",
             width: "100%",
+            marginBottom: "1rem",
             padding: "8px",
           }}
         >
-          <option value="">-- Selecciona un paciente --</option>
+          <option value="">-- Selecciona paciente --</option>
           {patients.map((p) => (
             <option key={p.id} value={p.id}>
               {p.full_name}
@@ -100,24 +148,54 @@ export default function SpecialistNewAppointment() {
           ))}
         </select>
 
-        <label>Fecha y hora:</label>
+        <label>Fecha:</label>
         <input
-          type="datetime-local"
-          min={new Date().toISOString().slice(0, 16)}
-          value={newAppointment.scheduled_at}
+          type="date"
+          value={newAppointment.scheduled_date}
           onChange={(e) =>
-            setNewAppointment({
-              ...newAppointment,
-              scheduled_at: e.target.value,
-            })
+            setNewAppointment({ ...newAppointment, scheduled_date: e.target.value })
           }
-          style={{
-            display: "block",
-            margin: "0.5rem 0 1rem 0",
-            width: "100%",
-            padding: "8px",
-          }}
+          min={new Date().toISOString().slice(0, 10)}
+          style={{ display: "block", width: "100%", marginBottom: "0.5rem", padding: "8px" }}
         />
+
+        <label>Hora:</label>
+        <select
+          value={newAppointment.scheduled_time}
+          onChange={(e) =>
+            setNewAppointment({ ...newAppointment, scheduled_time: e.target.value })
+          }
+          style={{ display: "block", width: "100%", marginBottom: "1.5rem", padding: "8px" }}
+        >
+          <option value="">-- Selecciona hora --</option>
+          {[
+            "08:00",
+            "08:30",
+            "09:00",
+            "09:30",
+            "10:00",
+            "10:30",
+            "11:00",
+            "11:30",
+            "12:00",
+            "12:30",
+            "14:00",
+            "14:30",
+            "15:00",
+            "15:30",
+            "16:00",
+          ].map((t) => (
+            <option key={t} value={t}>
+              {(() => {
+                const [hh, mm] = t.split(":");
+                let hour = parseInt(hh, 10);
+                const ampm = hour >= 12 ? "pm" : "am";
+                if (hour > 12) hour = hour - 12;
+                return `${hour}:${mm} ${ampm}`;
+              })()}
+            </option>
+          ))}
+        </select>
 
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <button
@@ -149,7 +227,8 @@ export default function SpecialistNewAppointment() {
             Crear cita
           </button>
         </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }

@@ -12,7 +12,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000; /* keep above page content but allow layout spacing */
+  z-index: 900; /* keep above page content but allow layout spacing */
   box-shadow: 6px 12px 40px rgba(2,16,38,0.35);
   padding: 20px;
 }

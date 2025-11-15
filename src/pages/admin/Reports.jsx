@@ -143,32 +143,25 @@ export default function Reports() {
   };
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        background: "white",
-        borderRadius: "12px",
-        maxWidth: "700px",
-        margin: "2rem auto",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
-      }}
-    >
-      <h2 style={{ marginBottom: "1rem" }}>📊 Reportes del sistema</h2>
-      <p>Descarga la información de cada módulo en formato Excel.</p>
+    <div className="create-appointment-wrapper">
+      <div className="card create-appointment-card" style={{ maxWidth: 700 }}>
+        <h2 style={{ marginBottom: "1rem" }}>📊 Reportes del sistema</h2>
+        <p>Descarga la información de cada módulo en formato Excel.</p>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "1.5rem" }}>
-        <button onClick={downloadUsers} disabled={loading}>
-          📁 Descargar usuarios / pacientes
-        </button>
-        <button onClick={downloadAppointments} disabled={loading}>
-          📅 Descargar citas
-        </button>
-        <button onClick={downloadExams} disabled={loading}>
-          🧾 Descargar exámenes
-        </button>
-        <button onClick={downloadReferrals} disabled={loading}>
-          🩺 Descargar remisiones
-        </button>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "1.5rem" }}>
+          <button className="btn btn-ghost" onClick={downloadUsers} disabled={loading} style={{ textAlign: "left", width: "100%", padding: "12px 16px" }}>
+            📁 Descargar usuarios / pacientes
+          </button>
+          <button className="btn btn-ghost" onClick={downloadAppointments} disabled={loading} style={{ textAlign: "left", width: "100%", padding: "12px 16px" }}>
+            📅 Descargar citas
+          </button>
+          <button className="btn btn-ghost" onClick={downloadExams} disabled={loading} style={{ textAlign: "left", width: "100%", padding: "12px 16px" }}>
+            🧾 Descargar exámenes
+          </button>
+          <button className="btn btn-ghost" onClick={downloadReferrals} disabled={loading} style={{ textAlign: "left", width: "100%", padding: "12px 16px" }}>
+            🩺 Descargar remisiones
+          </button>
+        </div>
       </div>
     </div>
   );

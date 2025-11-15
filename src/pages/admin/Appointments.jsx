@@ -88,8 +88,8 @@ export default function AdminAppointments() {
             </thead>
             <tbody>
               {filteredAppointments.map((a) => (
-                <tr key={a.id} style={{ borderBottom: "1px solid #ddd" }}>
-                  <td>{new Date(a.scheduled_at).toLocaleString()}</td>
+                <tr key={a.id}>
+                  <td>{new Date(a.scheduled_at).toLocaleString("es-CO", { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</td>
                   <td>{a.patient?.full_name || "Sin nombre"}</td>
                   <td>
                     {a.specialist

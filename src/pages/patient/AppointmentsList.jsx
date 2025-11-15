@@ -84,21 +84,23 @@ export default function AppointmentsList() {
           <p>Cargando...</p>
         ) : appointments.length === 0 ? (
           <p>No tienes citas registradas.</p>
-        ) : (
+          ) : (
           <table className="exams-table">
             <thead>
               <tr style={{ textAlign: "left" }}>
                 <th>Fecha</th>
                 <th>Especialista</th>
+                <th>Dirección</th>
                 <th>Estado</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               {appointments.map((a) => (
-                <tr key={a.id} style={{ borderBottom: "1px solid #ddd" }}>
-                  <td>{new Date(a.scheduled_at).toLocaleString()}</td>
+                <tr key={a.id}>
+                  <td>{new Date(a.scheduled_at).toLocaleString("es-CO", { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</td>
                   <td>{a.specialist_role}</td>
+                  <td>Cl. 142a #111-27, Bogotá</td>
                   <td>{a.status}</td>
                   <td>
                     {a.status === "scheduled" && (

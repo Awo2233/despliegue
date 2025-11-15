@@ -66,16 +66,17 @@ export default function SpecialistCreateExamForm() {
   };
 
   return (
-    <div>
-      <h2 style={{ fontSize: "1.8rem", marginBottom: "1rem" }}>
-        Crear Examen ({profile.role === "optometrist" ? "Optometrista" : "Ortoptista"})
-      </h2>
+    <div className="create-exam-wrapper">
+      <div>
+        <h2 style={{ fontSize: "1.8rem", marginBottom: "1rem" }}>
+          Crear Examen ({profile.role === "optometrist" ? "Optometrista" : "Ortoptista"})
+        </h2>
 
-      <form
-        onSubmit={createExam}
-        className="card"
-        style={{ marginBottom: "2rem", maxWidth: 600 }}
-      >
+        <form
+          onSubmit={createExam}
+          className="card create-exam-card"
+          style={{ marginBottom: "2rem", maxWidth: 600 }}
+        >
         <h3>Nuevo examen</h3>
 
         <label>Paciente:</label>
@@ -118,7 +119,8 @@ export default function SpecialistCreateExamForm() {
         <button className="save-btn" type="submit">
           ➕ Crear examen
         </button>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }

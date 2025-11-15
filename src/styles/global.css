@@ -155,8 +155,8 @@ tr:nth-child(even) { background: rgba(15,23,42,0.02); }
 
 /* Badges */
 .status-badge { display: inline-block; padding: 6px 10px; border-radius: 999px; font-weight: 600; font-size: .85rem; }
-.status-badge.done { background: #e6ffef; color: var(--success); }
-.status-badge.pending { background: #fff7e6; color: var(--warning); }
+.status-badge.done { background: #27AE60; color: white; }
+.status-badge.pending { background: #E74C3C; color: white; }
 
 /* Sidebar / Layout helpers keep compatibility with existing classes */
 .layout-content { background: transparent; }
@@ -258,6 +258,21 @@ body.dark-mode .btn-ghost {
   border-color: rgba(255,255,255,0.06);
 }
 
+/* Specific smaller appearance for the "Nuevo examen" button */
+.new-exam-btn {
+  padding: 6px 10px !important;
+  font-size: 0.9rem;
+  border-radius: 8px !important;
+  min-width: 0 !important;
+  height: auto !important;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.12) !important;
+}
+
+/* Ensure the primary gradient remains but with smaller visual weight */
+.btn-primary.new-exam-btn {
+  padding: 6px 10px !important;
+}
+
 /* Sidebar adjustments if not already dark */
 body.dark-mode .sidebar {
   background: linear-gradient(180deg, var(--color-700), var(--color-800));
@@ -269,8 +284,8 @@ body.dark-mode .sidebar .sidebar-menu li {
 }
 
 /* Small UI elements */
-body.dark-mode .status-badge.pending { background: rgba(255,255,255,0.05); color: #ffeaa7; }
-body.dark-mode .status-badge.done { background: rgba(255,255,255,0.04); color: #8ef7b6; }
+body.dark-mode .status-badge.pending { background: #E74C3C; color: white; }
+body.dark-mode .status-badge.done { background: #27AE60; color: white; }
 
 /* Ensure floating controls remain visible */
 body.dark-mode button[aria-label="Abrir ajustes"],
@@ -630,5 +645,62 @@ body.dark-mode .auth-container .register-link { color: rgba(230,238,248,0.8); }
 .user-form select, .user-form input, .user-form textarea {
   width: 100%;
 }
+
+/* Center only the Create Exam form on admin CreateExam page */
+.create-exam-wrapper {
+  display: flex;
+  justify-content: center; /* center horizontally within content area */
+  align-items: flex-start; /* keep form aligned to top */
+  padding: 20px 12px; /* small vertical spacing to match other forms */
+}
+
+.create-exam-wrapper .create-exam-card {
+  margin: 0; /* remove extra auto margins to rely on wrapper centering */
+  width: 100%;
+  max-width: 700px; /* keep the same width as inline style in JSX */
+}
+
+/* Create appointment wrapper/card used by new-appointment pages */
+.create-appointment-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px 12px;
+}
+
+.create-appointment-card {
+  width: 100%;
+  max-width: 700px;
+  margin: 0;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 30px rgba(9,30,66,0.05);
+}
+
+/* Slightly narrower card for patient form to match previous size */
+.create-appointment-card--small { max-width: 500px; }
+
+/* Search input used across lists (Users, Exams, Referrals) */
+.search-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(15,23,42,0.06);
+  background: inherit;
+  color: inherit;
+  font: inherit;
+}
+
+.btn-delete {
+  background: transparent;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+body.dark-mode .btn-delete { color: #ff7b7b; }
 
 

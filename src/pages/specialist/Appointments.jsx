@@ -66,7 +66,7 @@ export default function SpecialistAppointments() {
         ) : (
           <table className="exams-table">
             <thead>
-              <tr style={{ background: "var(--color-50)", textAlign: "left" }}>
+              <tr style={{ textAlign: "left" }}>
                 <th>Fecha</th>
                 <th>Paciente</th>
                 <th>Estado</th>
@@ -75,8 +75,8 @@ export default function SpecialistAppointments() {
             </thead>
             <tbody>
               {appointments.map((a) => (
-                <tr key={a.id} style={{ borderBottom: "1px solid #ddd" }}>
-                  <td>{new Date(a.scheduled_at).toLocaleString()}</td>
+                <tr key={a.id}>
+                  <td>{new Date(a.scheduled_at).toLocaleString("es-CO", { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</td>
                   <td>{a.patient?.full_name || "Desconocido"}</td>
                   <td>{a.status}</td>
                   <td>

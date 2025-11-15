@@ -4,6 +4,7 @@ import { supabase } from "../../api/supabaseClient";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
+  const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -17,6 +18,7 @@ export default function AdminUsers() {
     address: "",
     document: "",
     observations: "",
+    eps: "",
   };
 
   const [form, setForm] = useState(emptyUser);
@@ -39,7 +41,8 @@ export default function AdminUsers() {
           birthdate,
           address,
           document,
-          observations
+          observations,
+          eps
         )
       `);
 
@@ -55,6 +58,7 @@ export default function AdminUsers() {
         address: u.patients?.address || "",
         document: u.patients?.document || "",
         observations: u.patients?.observations || "",
+        eps: u.patients?.eps || "",
       }));
       setUsers(mapped);
     }
@@ -99,63 +103,107 @@ export default function AdminUsers() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSaving(true);
-
     if (!selected) {
       alert("Selecciona un paciente para editar");
-      setSaving(false);
       return;
     }
 
-    // 🔹 Actualizar profile
-    const { error: profileErr } = await supabase
-      .from("profiles")
-      .update({
-        full_name: form.full_name,
-        email: form.email,
-        phone: form.phone,
-        role: form.role,
-      })
-      .eq("id", selected);
+    // Validación: todos los campos obligatorios
+    const required = [
+      "full_name",
+      "email",
+      "phone",
+      "role",
+      "document",
+      "birth_date",
+      "address",
+      "observations",
+    ];
 
-    // 🔹 Actualizar paciente
-    const { error: patientErr } = await supabase
-      .from("patients")
-      .upsert(
-        {
-          id: selected,
-          birthdate: form.birth_date || null,
-          address: form.address || null,
-          document: form.document || null,
-          observations: form.observations || null,
-        },
-        { onConflict: "id" }
-      );
+    const missing = required.some((k) => {
+      const v = form[k];
+      return v === undefined || v === null || (typeof v === "string" && v.trim() === "");
+    });
 
-    if (profileErr || patientErr) {
-      console.error(profileErr || patientErr);
-      alert("Error al actualizar paciente");
-    } else {
-      alert("✅ Paciente actualizado correctamente");
-      setSelected(null); // 🔹 Cierra el panel de edición
-      setForm(emptyUser);
-      fetchUsers();
+    if (missing) {
+      alert("es obligatorio llenar todos los campos para actualizar la informacion de este paciente");
+      return;
     }
 
-    setSaving(false);
+    setSaving(true);
+    try {
+      // 🔹 Actualizar profile
+      const { error: profileErr } = await supabase
+        .from("profiles")
+        .update({
+          full_name: form.full_name,
+          email: form.email,
+          phone: form.phone,
+          role: form.role,
+        })
+        .eq("id", selected);
+
+      // 🔹 Actualizar paciente
+      const { error: patientErr } = await supabase
+        .from("patients")
+        .upsert(
+          {
+            id: selected,
+            birthdate: form.birth_date || null,
+            address: form.address || null,
+            document: form.document || null,
+            observations: form.observations || null,
+            eps: form.eps || null,
+          },
+          { onConflict: "id" }
+        );
+
+      if (profileErr || patientErr) {
+        console.error(profileErr || patientErr);
+        alert("Error al actualizar paciente");
+      } else {
+        alert("✅ Paciente actualizado correctamente");
+        setSelected(null); // 🔹 Cierra el formulario
+        setForm(emptyUser);
+        fetchUsers();
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error al actualizar paciente");
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) return <p>Cargando usuarios...</p>;
 
+  const filteredUsers = users.filter((u) => {
+    if (!search || !search.trim()) return true;
+    const term = search.trim().toLowerCase();
+    const name = (u.full_name || "").toLowerCase();
+    const email = (u.email || "").toLowerCase();
+    const doc = (u.document || "").toLowerCase();
+    return name.includes(term) || email.includes(term) || doc.includes(term);
+  });
+
   return (
     <div className="admin-users-container">
-      <div className="users-list">
+      <div className="users-list card">
         <div className="list-header">
           <h2>Usuarios registrados</h2>
+          <div style={{ marginTop: 10 }}>
+            <input
+              type="text"
+              placeholder="Buscar por nombre, documento o correo"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="search-input"
+            />
+          </div>
         </div>
 
         <ul>
-          {users.map((u) => (
+          {filteredUsers.map((u) => (
             <li
               key={u.id}
               onClick={() => handleEdit(u.id)}
@@ -179,7 +227,7 @@ export default function AdminUsers() {
         </ul>
       </div>
 
-      <div className="user-form">
+      <div className="user-form card">
         {selected ? (
           <>
             <h2>Editando paciente</h2>
@@ -253,6 +301,34 @@ export default function AdminUsers() {
                 placeholder="Notas o comentarios del paciente"
                 rows="3"
               />
+
+              <label>EPS</label>
+              <select name="eps" value={form.eps || ""} onChange={handleChange} style={{ display: "block", width: "100%", padding: "8px", margin: "0.5rem 0" }}>
+                <option value="">-- Selecciona EPS --</option>
+                {[
+                  "ALIANSALUD ENTIDAD PROMOTORA DE SALUD S.A.",
+                  "ASOCIACIÓN INDÍGENA DEL CAUCA",
+                  "CAPITAL SALUD",
+                  "CAPRESOCA  EPS",
+                  "COMFENALCO  VALLE  E.P.S.",
+                  "COMPENSAR   E.P.S.",
+                  "COOPERATIVA DE SALUD Y DESARROLLO INTEGRAL ZONA SUR ORIENTAL DE CARTAGENA",
+                  "E.P.S.  FAMISANAR LTDA.",
+                  "E.P.S.  SANITAS S.A.",
+                  "EPS  CONVIDA",
+                  "EPS SERVICIO OCCIDENTAL DE SALUD S.A.",
+                  "EPS Y MEDICINA PREPAGADA SURAMERICANA S.A",
+                  "MALLAMAS",
+                  "NUEVA EPS S.A.",
+                  "PIJAOS SALUD EPSI",
+                  "SALUD TOTAL S.A.  E.P.S.",
+                  "SALUDVIDA S.A. E.P.S",
+                  "SAVIA SALUD EPS",
+                  "ninguna de las anteriores",
+                ].map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
 
               <div className="form-actions">
                 <button

@@ -95,14 +95,16 @@ export default function AdminReferrals() {
                 <tr key={r.id}>
                   <td>{r.patient?.full_name || "—"}</td>
                   <td>
-                    {r.from_role === "optometrist" ? "Optometrista" : "Ortoptista"}
+                    {r.creator?.full_name
+                      ? `${r.creator.full_name} (${r.from_role === "optometrist" ? "Optometrista" : "Ortoptista"})`
+                      : (r.from_role === "optometrist" ? "Optometrista" : "Ortoptista")}
                   </td>
                   <td>
-                    {r.to_role === "optometrist" ? "Optometrista" : "Ortoptista"}
+                    {r.to_role === "optometrist" ? `No asignado (Optometrista)` : `No asignado (Ortoptista)`}
                   </td>
                   <td>{r.reason}</td>
                   <td>{r.creator?.full_name || "—"}</td>
-                  <td>{new Date(r.created_at).toLocaleString()}</td>
+                  <td>{new Date(r.created_at).toLocaleString("es-CO", { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</td>
                 </tr>
               ))}
             </tbody>
