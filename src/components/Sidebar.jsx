@@ -48,7 +48,7 @@ const Sidebar = ({ role }) => {
           { label: "Mis Examenes", icon: <FaFileAlt />, path: "/patient/exams" },
           { label: "Mis Remisiones", icon: <FaStethoscope />, path: "/patient/referrals" },
           { label: "Juegos", icon: <FaGamepad />, path: "/patient/games" },
-          { label: "Mi Prerfil", icon: <FaUser />, path: "/patient/profile" },
+          { label: "Mi Perfil", icon: <FaUser />, path: "/patient/profile" },
         ];
 
   return (
