@@ -56,10 +56,10 @@ const Sidebar = ({ role }) => {
       <div className="sidebar-header">
         <h2>
           {role === "admin"
-            ? "Administrator"
+            ? "Administrador"
             : role === "optometrist" || role === "ortoptist"
             ? "Especialista"
-            : "Paciente"}
+            : "Pasiente"}
         </h2>
       </div>
 

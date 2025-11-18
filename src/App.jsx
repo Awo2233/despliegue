@@ -1,5 +1,5 @@
 // src/App.jsx
-import React from "react";
+import React, { useEffect } from "react";  // ⬅️ agregué useEffect
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 import Footer from './components/Footer';
@@ -27,7 +27,6 @@ import CreateExamForm from "./pages/admin/CreateExamForm";
 import AdminReferrals from "./pages/admin/Referrals";
 import Reports from "./pages/admin/Reports";
 
-
 // Especialistas pages
 import SpecialistProfile from "./pages/specialist/Profile";
 import SpecialistAppointments from "./pages/specialist/Appointments";
@@ -38,7 +37,7 @@ import SpecialistReferrals from "./pages/specialist/Referrals";
 import SpecialistCreateReferral from "./pages/specialist/SpecialistCreateReferral";
 import SpecialistUsers from "./pages/specialist/Users";
 
-// PAciente pages
+// Paciente pages
 import PatientProfile from "./pages/patient/Profile";
 import AppointmentsList from "./pages/patient/AppointmentsList";
 import NewAppointment from "./pages/patient/NewAppointment";
@@ -49,74 +48,82 @@ import PatientGames from "./pages/patient/Games/Games";
 export default function App() {
   const { session, profile, loading } = useAuth();
 
+  // ✅ BLOQUEAR HISTORIAL (evita volver al login y volver al panel sin sesión)
+  useEffect(() => {
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = () => {
+      window.history.go(1);
+    };
+  }, []);
+
   if (loading) return <div style={{ padding: 40 }}>Cargando autenticación...</div>;
 
   return (
     <>
-    <BrowserRouter>
-      <Routes>
-        {/* Rutas públicas */}
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
+      <BrowserRouter>
+        <Routes>
+          {/* Rutas públicas */}
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
 
-        {/* Si NO hay sesión → redirigir a /signin */}
-        {!session ? (
-          <Route path="*" element={<Navigate to="/signin" replace />} />
-        ) : (
-          // Rutas privadas: todo dentro del DashboardLayout para mantener Sidebar fijo
-          <Route element={<DashboardLayout />}>
-            {/* Dashboard general (visible para todos los roles) */}
-            <Route path="/dashboard" element={<Dashboard />} />
+          {/* Si NO hay sesión → redirigir a /signin */}
+          {!session ? (
+            <Route path="*" element={<Navigate to="/signin" replace />} />
+          ) : (
+            // Rutas privadas: todo dentro del DashboardLayout para mantener Sidebar fijo
+            <Route element={<DashboardLayout />}>
+              {/* Dashboard general (visible para todos los roles) */}
+              <Route path="/dashboard" element={<Dashboard />} />
 
-            {/* Rutas ADMIN */}
-            {profile?.role === "admin" && (
-              <>
-                <Route path="/admin/users" element={<AdminUsers />} />
-                <Route path="/admin/appointments" element={<AdminAppointments />} />
-                <Route path="/admin/new-appointment" element={<AdminNewAppointment />} />
-                <Route path="/admin/exams" element={<Exams />} />
-                <Route path="/admin/create-exam" element={<CreateExamForm />} />
-                <Route path="/admin/referrals" element={<AdminReferrals />} />
-                <Route path="/admin/reports" element={<Reports />} />
-                <Route path="*" element={<Navigate to="/admin/users" replace />} />
-              </>
-            )}
+              {/* Rutas ADMIN */}
+              {profile?.role === "admin" && (
+                <>
+                  <Route path="/admin/users" element={<AdminUsers />} />
+                  <Route path="/admin/appointments" element={<AdminAppointments />} />
+                  <Route path="/admin/new-appointment" element={<AdminNewAppointment />} />
+                  <Route path="/admin/exams" element={<Exams />} />
+                  <Route path="/admin/create-exam" element={<CreateExamForm />} />
+                  <Route path="/admin/referrals" element={<AdminReferrals />} />
+                  <Route path="/admin/reports" element={<Reports />} />
+                  <Route path="*" element={<Navigate to="/admin/users" replace />} />
+                </>
+              )}
 
-            {/* Rutas ESPECIALISTA */}
-            {(profile?.role === "optometrist" || profile?.role === "ortoptist") && (
-              <>
-                <Route path="/specialist/profile" element={<SpecialistProfile />} />
-                <Route path="/specialist/appointments" element={<SpecialistAppointments />} />
-                <Route path="/specialist/exams" element={<SpecialistExams />} />
-                <Route path="/specialist/create-exam" element={<SpecialistCreateExamForm />} />
-                <Route path="/specialist/referrals" element={<SpecialistReferrals />} />
-                <Route path="/specialist/referrals/new" element={<SpecialistCreateReferral />} />
-                <Route path="/specialist/new-appointment" element={<SpecialistNewAppointment />} />
-                <Route path="/specialist/users" element={<SpecialistUsers />} />
-                <Route path="*" element={<Navigate to="/specialist/profile" replace />} />
-              </>
-            )}
+              {/* Rutas ESPECIALISTA */}
+              {(profile?.role === "optometrist" || profile?.role === "ortoptist") && (
+                <>
+                  <Route path="/specialist/profile" element={<SpecialistProfile />} />
+                  <Route path="/specialist/appointments" element={<SpecialistAppointments />} />
+                  <Route path="/specialist/exams" element={<SpecialistExams />} />
+                  <Route path="/specialist/create-exam" element={<SpecialistCreateExamForm />} />
+                  <Route path="/specialist/referrals" element={<SpecialistReferrals />} />
+                  <Route path="/specialist/referrals/new" element={<SpecialistCreateReferral />} />
+                  <Route path="/specialist/new-appointment" element={<SpecialistNewAppointment />} />
+                  <Route path="/specialist/users" element={<SpecialistUsers />} />
+                  <Route path="*" element={<Navigate to="/specialist/profile" replace />} />
+                </>
+              )}
 
-            {/* Rutas PACIENTE */}
-            {profile?.role === "patient" && (
-              <>
-                <Route path="/patient/profile" element={<PatientProfile />} />
-                <Route path="/patient/appointments" element={<AppointmentsList />} />
-                <Route path="/patient/new-appointment" element={<NewAppointment />} />
-                <Route path="/patient/exams" element={<PatientExams />} />
-                <Route path="/patient/referrals" element={<PatientReferrals />} />
-                <Route path="/patient/games" element={<PatientGames />} />
-                <Route path="*" element={<Navigate to="/patient/profile" replace />} />
-              </>
-            )}
-          </Route>
-        )}
-      </Routes>
-     
-      <Footer />
-    </BrowserRouter>
+              {/* Rutas PACIENTE */}
+              {profile?.role === "patient" && (
+                <>
+                  <Route path="/patient/profile" element={<PatientProfile />} />
+                  <Route path="/patient/appointments" element={<AppointmentsList />} />
+                  <Route path="/patient/new-appointment" element={<NewAppointment />} />
+                  <Route path="/patient/exams" element={<PatientExams />} />
+                  <Route path="/patient/referrals" element={<PatientReferrals />} />
+                  <Route path="/patient/games" element={<PatientGames />} />
+                  <Route path="*" element={<Navigate to="/patient/profile" replace />} />
+                </>
+              )}
+            </Route>
+          )}
+        </Routes>
 
-     <SettingsBubble />
+        <Footer />
+      </BrowserRouter>
+
+      <SettingsBubble />
     </>
   );
 }
