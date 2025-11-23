@@ -32,6 +32,8 @@ const Sidebar = ({ role }) => {
           { label: "Examenes", icon: <FaFileAlt />, path: "/admin/Exams" },
           { label: "Remisiones", icon: <FaStethoscope />, path: "/admin/referrals" },
           { label: "Reportes", icon: <FaChartBar />, path: "/admin/reports" },
+          { label: "Historial", icon: <FaFileAlt />, path: "/admin/history" },
+
         ]
       : role === "optometrist" || role === "ortoptist"
       ? [
@@ -57,9 +59,9 @@ const Sidebar = ({ role }) => {
         <h2>
           {role === "admin"
             ? "Administrador"
-            : role === "optometrist" || role === "ortoptist"
+            : role === "optometrista" || role === "ortoptista"
             ? "Especialista"
-            : "Pasiente"}
+            : "Paciente"}
         </h2>
       </div>
 

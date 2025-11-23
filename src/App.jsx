@@ -1,11 +1,9 @@
 // src/App.jsx
-import React, { useEffect } from "react";  // ⬅️ agregué useEffect
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 import Footer from './components/Footer';
 
-// ⚙️ Ajustes globales
-// SettingsProvider is provided in main.jsx; don't wrap again here
 import SettingsBubble from "./components/SettingsBubble";
 
 // Auth
@@ -15,29 +13,33 @@ import SignUp from "./components/Auth/SignUp";
 // Layout
 import DashboardLayout from "./layouts/DashboardLayout";
 
-// Dashboard base
+// Dashboard
 import Dashboard from "./pages/Dashboard";
 
 // Admin pages
 import AdminUsers from "./pages/admin/Users";
 import AdminAppointments from "./pages/admin/Appointments";
-import AdminNewAppointment from "./pages/admin/AdminNewAppointment"
+import AdminNewAppointment from "./pages/admin/AdminNewAppointment";
 import Exams from "./pages/admin/Exams";
 import CreateExamForm from "./pages/admin/CreateExamForm";
 import AdminReferrals from "./pages/admin/Referrals";
 import Reports from "./pages/admin/Reports";
 
-// Especialistas pages
+// 📌 HISTORIAL (IMPORTS CORRECTOS)
+import AdminHistory from "./pages/admin/AdminHistory";
+import UserHistory from "./pages/admin/history/UserHistory";
+
+// Especialistas
 import SpecialistProfile from "./pages/specialist/Profile";
 import SpecialistAppointments from "./pages/specialist/Appointments";
-import SpecialistNewAppointment from "./pages/specialist/SpecialistNewAppointment"
+import SpecialistNewAppointment from "./pages/specialist/SpecialistNewAppointment";
 import SpecialistExams from "./pages/specialist/Exams";
-import SpecialistCreateExamForm from "./pages/specialist/SpecialistCreateExamForm"
+import SpecialistCreateExamForm from "./pages/specialist/SpecialistCreateExamForm";
 import SpecialistReferrals from "./pages/specialist/Referrals";
 import SpecialistCreateReferral from "./pages/specialist/SpecialistCreateReferral";
 import SpecialistUsers from "./pages/specialist/Users";
 
-// Paciente pages
+// Pacientes
 import PatientProfile from "./pages/patient/Profile";
 import AppointmentsList from "./pages/patient/AppointmentsList";
 import NewAppointment from "./pages/patient/NewAppointment";
@@ -48,7 +50,6 @@ import PatientGames from "./pages/patient/Games/Games";
 export default function App() {
   const { session, profile, loading } = useAuth();
 
-  // ✅ BLOQUEAR HISTORIAL (evita volver al login y volver al panel sin sesión)
   useEffect(() => {
     window.history.pushState(null, null, window.location.href);
     window.onpopstate = () => {
@@ -62,20 +63,16 @@ export default function App() {
     <>
       <BrowserRouter>
         <Routes>
-          {/* Rutas públicas */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
 
-          {/* Si NO hay sesión → redirigir a /signin */}
           {!session ? (
             <Route path="*" element={<Navigate to="/signin" replace />} />
           ) : (
-            // Rutas privadas: todo dentro del DashboardLayout para mantener Sidebar fijo
             <Route element={<DashboardLayout />}>
-              {/* Dashboard general (visible para todos los roles) */}
               <Route path="/dashboard" element={<Dashboard />} />
 
-              {/* Rutas ADMIN */}
+              {/* ADMIN */}
               {profile?.role === "admin" && (
                 <>
                   <Route path="/admin/users" element={<AdminUsers />} />
@@ -85,11 +82,16 @@ export default function App() {
                   <Route path="/admin/create-exam" element={<CreateExamForm />} />
                   <Route path="/admin/referrals" element={<AdminReferrals />} />
                   <Route path="/admin/reports" element={<Reports />} />
+
+                  {/* 📌 NUEVAS RUTAS DEL HISTORIAL */}
+                  <Route path="/admin/history" element={<AdminHistory />} />
+                  <Route path="/admin/history/user/:id" element={<UserHistory />} />
+
                   <Route path="*" element={<Navigate to="/admin/users" replace />} />
                 </>
               )}
 
-              {/* Rutas ESPECIALISTA */}
+              {/* ESPECIALISTA */}
               {(profile?.role === "optometrist" || profile?.role === "ortoptist") && (
                 <>
                   <Route path="/specialist/profile" element={<SpecialistProfile />} />
@@ -104,7 +106,7 @@ export default function App() {
                 </>
               )}
 
-              {/* Rutas PACIENTE */}
+              {/* PACIENTE */}
               {profile?.role === "patient" && (
                 <>
                   <Route path="/patient/profile" element={<PatientProfile />} />

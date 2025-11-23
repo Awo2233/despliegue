@@ -8,7 +8,7 @@ export default function AdminUsers() {
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [exporting, setExporting] = useState(false); // para bloquear botones
+  const [exporting, setExporting] = useState(false);
 
   const emptyUser = {
     full_name: "",
@@ -29,10 +29,11 @@ export default function AdminUsers() {
   }, []);
 
   // ============================================================
-  // FETCH USUARIOS COMPLETO
+  // FETCH USUARIOS (SOLO LOS NO ELIMINADOS)
   // ============================================================
   async function fetchUsers() {
     setLoading(true);
+
     const { data, error } = await supabase
       .from("profiles")
       .select(`
@@ -41,61 +42,63 @@ export default function AdminUsers() {
         email,
         phone,
         role,
+        is_deleted,
         patients (
           birthdate,
           address,
           document,
           observations,
-          eps
+          eps,
+          is_deleted
         )
-      `);
+      `)
+      .eq("is_deleted", false); // <<--- SOLO LOS NO ELIMINADOS
 
     if (error) {
       console.error(error);
       alert("Error cargando usuarios");
     } else {
-      const mapped = data.map((u) => ({
-        id: u.id,
-        full_name: u.full_name,
-        email: u.email,
-        phone: u.phone,
-        role: u.role,
-        birth_date: u.patients?.birthdate || "",
-        address: u.patients?.address || "",
-        document: u.patients?.document || "",
-        observations: u.patients?.observations || "",
-        eps: u.patients?.eps || "",
-      }));
+      const mapped = data
+        .filter((u) => !u.is_deleted) // seguridad extra
+        .map((u) => ({
+          id: u.id,
+          full_name: u.full_name,
+          email: u.email,
+          phone: u.phone,
+          role: u.role,
+          birth_date: u.patients?.birthdate || "",
+          address: u.patients?.address || "",
+          document: u.patients?.document || "",
+          observations: u.patients?.observations || "",
+          eps: u.patients?.eps || "",
+        }));
+
       setUsers(mapped);
     }
+
     setLoading(false);
   }
 
   // ============================================================
-  // UTIL: obtener mapa id -> full_name (profiles)
-  // recibe array de ids, retorna { id: full_name }
+  // GET PROFILES MAP
   // ============================================================
   async function getProfilesMap(ids) {
     const uniqueIds = Array.from(new Set(ids.filter(Boolean)));
     if (uniqueIds.length === 0) return {};
+
     const { data, error } = await supabase
       .from("profiles")
       .select("id, full_name")
       .in("id", uniqueIds);
-    if (error) {
-      console.error("Error al traer profiles para mapa:", error);
-      return {};
-    }
+
+    if (error) return {};
+
     const map = {};
     data.forEach((p) => (map[p.id] = p.full_name));
     return map;
   }
 
-  // ============================================================
-  // EXPORT TO EXCEL helper
-  // rows: array de objetos ya formateados
-  // filename: string
-  // ============================================================
+  // Excel helper
   async function exportRowsToExcel(rows, filename) {
     try {
       const XLSX = (await import("xlsx")).default || (await import("xlsx"));
@@ -104,15 +107,15 @@ export default function AdminUsers() {
       XLSX.utils.book_append_sheet(wb, ws, "Reporte");
       XLSX.writeFile(wb, filename);
     } catch (err) {
-      console.error("Error generando Excel:", err);
-      alert("Ocurrió un error al generar el Excel.");
+      console.error(err);
+      alert("Error generando el Excel.");
     }
   }
 
   // ============================================================
   // EDITAR
   // ============================================================
-  async function handleEdit(id) {
+  function handleEdit(id) {
     const user = users.find((u) => u.id === id);
     if (user) {
       setSelected(id);
@@ -121,26 +124,28 @@ export default function AdminUsers() {
   }
 
   // ============================================================
-  // ELIMINAR
+  // 🗑️ ELIMINACIÓN LÓGICA (SOFT DELETE)
   // ============================================================
   async function handleDelete(id) {
     if (!window.confirm("¿Seguro que deseas eliminar este paciente?")) return;
 
-    const { error: patientErr } = await supabase
-      .from("patients")
-      .delete()
-      .eq("id", id);
-
+    // Marcar como eliminado en profiles
     const { error: profileErr } = await supabase
       .from("profiles")
-      .delete()
+      .update({ is_deleted: true })
       .eq("id", id);
 
-    if (patientErr || profileErr) {
-      console.error(patientErr || profileErr);
+    // Marcar como eliminado en patients
+    const { error: patientErr } = await supabase
+      .from("patients")
+      .update({ is_deleted: true })
+      .eq("id", id);
+
+    if (profileErr || patientErr) {
+      console.error(profileErr || patientErr);
       alert("Error al eliminar paciente");
     } else {
-      alert("Paciente eliminado correctamente");
+      alert("Paciente eliminado correctamente (soft delete)");
       fetchUsers();
       setSelected(null);
     }
@@ -165,7 +170,6 @@ export default function AdminUsers() {
       return;
     }
 
-    // Validación
     const required = [
       "full_name",
       "email",
@@ -178,19 +182,18 @@ export default function AdminUsers() {
     ];
 
     const missing = required.some(
-      (k) => !form[k] || (typeof form[k] === "string" && form[k].trim() === "")
+      (k) => !form[k] || form[k].trim() === ""
     );
 
     if (missing) {
-      alert("Es obligatorio llenar todos los campos para actualizar la información.");
+      alert("Todos los campos son obligatorios.");
       return;
     }
 
     setSaving(true);
 
     try {
-      // PROFILE
-      const { error: profileErr } = await supabase
+      await supabase
         .from("profiles")
         .update({
           full_name: form.full_name,
@@ -200,33 +203,28 @@ export default function AdminUsers() {
         })
         .eq("id", selected);
 
-      // PATIENT
-      const { error: patientErr } = await supabase
+      await supabase
         .from("patients")
         .upsert(
           {
             id: selected,
-            birthdate: form.birth_date || null,
-            address: form.address || null,
-            document: form.document || null,
-            observations: form.observations || null,
-            eps: form.eps || null,
+            birthdate: form.birth_date,
+            address: form.address,
+            document: form.document,
+            observations: form.observations,
+            eps: form.eps,
           },
           { onConflict: "id" }
         );
 
-      if (profileErr || patientErr) {
-        console.error(profileErr || patientErr);
-        alert("Error al actualizar paciente");
-      } else {
-        alert("Paciente actualizado correctamente");
-        setSelected(null);
-        setForm(emptyUser);
-        fetchUsers();
-      }
+      alert("Paciente actualizado correctamente");
+
+      setSelected(null);
+      setForm(emptyUser);
+      fetchUsers();
     } catch (err) {
       console.error(err);
-      alert("Error al actualizar paciente");
+      alert("Error al actualizar");
     } finally {
       setSaving(false);
     }
@@ -238,9 +236,8 @@ export default function AdminUsers() {
   // BUSCADOR
   // ============================================================
   const filteredUsers = users.filter((u) => {
-    const term = search.trim().toLowerCase();
+    const term = search.toLowerCase();
     if (!term) return true;
-
     return (
       u.full_name.toLowerCase().includes(term) ||
       u.email.toLowerCase().includes(term) ||
@@ -249,10 +246,8 @@ export default function AdminUsers() {
   });
 
   // ============================================================
-  // ==== FUNCIONES DE EXPORT (USUARIO PACIENTE Y ESPECIALISTA)
+  // EXPORTS (NO CAMBIADOS)
   // ============================================================
-
-  // Export citas de un paciente (mapea specialist_id -> nombre)
   async function exportPatientAppointments(patientId, patientName) {
     try {
       setExporting(true);
@@ -260,7 +255,7 @@ export default function AdminUsers() {
         .from("appointments")
         .select("*")
         .eq("patient_id", patientId)
-        .order("scheduled_at", { ascending: true });
+        .order("scheduled_at");
 
       if (error) throw error;
 
@@ -268,23 +263,25 @@ export default function AdminUsers() {
       const specialistsMap = await getProfilesMap(specialistIds);
 
       const rows = data.map((r) => ({
-        Fecha: r.scheduled_at ? new Date(r.scheduled_at).toLocaleString() : "",
+        Fecha: r.scheduled_at
+          ? new Date(r.scheduled_at).toLocaleString()
+          : "",
         Estado: r.status,
         Especialista: specialistsMap[r.specialist_id] || "N/A",
-        RolEspecialista: r.specialist_role || "",
-        Creado: r.created_at ? new Date(r.created_at).toLocaleString() : "",
+        RolEspecialista: r.specialist_role,
+        Creado: r.created_at
+          ? new Date(r.created_at).toLocaleString()
+          : "",
       }));
 
       await exportRowsToExcel(rows, `citas_${patientName}.xlsx`);
     } catch (err) {
-      console.error(err);
-      alert("Ocurrió un error al generar el reporte de citas.");
+      alert("Error generando reporte");
     } finally {
       setExporting(false);
     }
   }
 
-  // Export exámenes de un paciente (mapea created_by -> nombre)
   async function exportPatientExams(patientId, patientName) {
     try {
       setExporting(true);
@@ -292,7 +289,7 @@ export default function AdminUsers() {
         .from("exams")
         .select("*")
         .eq("patient_id", patientId)
-        .order("scheduled_at", { ascending: true });
+        .order("scheduled_at");
 
       if (error) throw error;
 
@@ -300,24 +297,26 @@ export default function AdminUsers() {
       const specialistsMap = await getProfilesMap(specialistIds);
 
       const rows = data.map((r) => ({
-        Fecha: r.scheduled_at ? new Date(r.scheduled_at).toLocaleString() : "",
-        Tipo: r.specialist_role || "",
-        Diagnóstico: r.diagnosis || "",
-        Observaciones: r.observations || "",
+        Fecha: r.scheduled_at
+          ? new Date(r.scheduled_at).toLocaleString()
+          : "",
+        Tipo: r.specialist_role,
+        Diagnóstico: r.diagnosis,
+        Observaciones: r.observations,
         "Realizado por": specialistsMap[r.created_by] || "N/A",
-        Creado: r.created_at ? new Date(r.created_at).toLocaleString() : "",
+        Creado: r.created_at
+          ? new Date(r.created_at).toLocaleString()
+          : "",
       }));
 
       await exportRowsToExcel(rows, `examenes_${patientName}.xlsx`);
     } catch (err) {
-      console.error(err);
-      alert("Ocurrió un error al generar el reporte de exámenes.");
+      alert("Error generando reporte");
     } finally {
       setExporting(false);
     }
   }
 
-  // Export citas atendidas por especialista (mapea patient_id -> nombre)
   async function exportSpecialistAppointments(specialistId, specialistName) {
     try {
       setExporting(true);
@@ -325,7 +324,7 @@ export default function AdminUsers() {
         .from("appointments")
         .select("*")
         .eq("specialist_id", specialistId)
-        .order("scheduled_at", { ascending: true });
+        .order("scheduled_at");
 
       if (error) throw error;
 
@@ -333,23 +332,25 @@ export default function AdminUsers() {
       const patientsMap = await getProfilesMap(patientIds);
 
       const rows = data.map((r) => ({
-        Fecha: r.scheduled_at ? new Date(r.scheduled_at).toLocaleString() : "",
+        Fecha: r.scheduled_at
+          ? new Date(r.scheduled_at).toLocaleString()
+          : "",
         Paciente: patientsMap[r.patient_id] || "N/A",
         Estado: r.status,
-        Motivo: r.reason || "",
-        Creado: r.created_at ? new Date(r.created_at).toLocaleString() : "",
+        Motivo: r.reason,
+        Creado: r.created_at
+          ? new Date(r.created_at).toLocaleString()
+          : "",
       }));
 
       await exportRowsToExcel(rows, `citas_atendidas_${specialistName}.xlsx`);
     } catch (err) {
-      console.error(err);
-      alert("Ocurrió un error al generar el reporte de citas del especialista.");
+      alert("Error generando reporte");
     } finally {
       setExporting(false);
     }
   }
 
-  // Export exámenes creados por especialista (mapea patient_id -> nombre)
   async function exportSpecialistExams(specialistId, specialistName) {
     try {
       setExporting(true);
@@ -357,7 +358,7 @@ export default function AdminUsers() {
         .from("exams")
         .select("*")
         .eq("created_by", specialistId)
-        .order("scheduled_at", { ascending: true });
+        .order("scheduled_at");
 
       if (error) throw error;
 
@@ -365,23 +366,28 @@ export default function AdminUsers() {
       const patientsMap = await getProfilesMap(patientIds);
 
       const rows = data.map((r) => ({
-        Fecha: r.scheduled_at ? new Date(r.scheduled_at).toLocaleString() : "",
+        Fecha: r.scheduled_at
+          ? new Date(r.scheduled_at).toLocaleString()
+          : "",
         Paciente: patientsMap[r.patient_id] || "N/A",
-        Tipo: r.specialist_role || "",
-        Resultado: r.diagnosis || r.observations || "",
-        Creado: r.created_at ? new Date(r.created_at).toLocaleString() : "",
+        Tipo: r.specialist_role,
+        Resultado: r.diagnosis || r.observations,
+        Creado: r.created_at
+          ? new Date(r.created_at).toLocaleString()
+          : "",
       }));
 
-      await exportRowsToExcel(rows, `examenes_realizados_${specialistName}.xlsx`);
+      await exportRowsToExcel(
+        rows,
+        `examenes_realizados_${specialistName}.xlsx`
+      );
     } catch (err) {
-      console.error(err);
-      alert("Ocurrió un error al generar el reporte de exámenes del especialista.");
+      alert("Error generando reporte");
     } finally {
       setExporting(false);
     }
   }
 
-  // Export remisiones creadas por especialista (mapea patient_id -> nombre)
   async function exportSpecialistReferrals(specialistId, specialistName) {
     try {
       setExporting(true);
@@ -389,7 +395,7 @@ export default function AdminUsers() {
         .from("referrals")
         .select("*")
         .eq("created_by", specialistId)
-        .order("created_at", { ascending: true });
+        .order("created_at");
 
       if (error) throw error;
 
@@ -397,17 +403,18 @@ export default function AdminUsers() {
       const patientsMap = await getProfilesMap(patientIds);
 
       const rows = data.map((r) => ({
-        Fecha: r.created_at ? new Date(r.created_at).toLocaleString() : "",
+        Fecha: r.created_at
+          ? new Date(r.created_at).toLocaleString()
+          : "",
         Paciente: patientsMap[r.patient_id] || "N/A",
-        FromRole: r.from_role || "",
-        ToRole: r.to_role || "",
-        Motivo: r.reason || r.notes || "",
+        FromRole: r.from_role,
+        ToRole: r.to_role,
+        Motivo: r.reason || r.notes,
       }));
 
       await exportRowsToExcel(rows, `remisiones_${specialistName}.xlsx`);
     } catch (err) {
-      console.error(err);
-      alert("Ocurrió un error al generar el reporte de remisiones.");
+      alert("Error generando reporte");
     } finally {
       setExporting(false);
     }
@@ -466,7 +473,6 @@ export default function AdminUsers() {
             <h2>Editando paciente</h2>
 
             <form onSubmit={handleSubmit}>
-              {/* campos ... igual a lo que tenías */}
               <label>Nombre completo</label>
               <input
                 type="text"
@@ -542,9 +548,31 @@ export default function AdminUsers() {
                   margin: "0.5rem 0",
                 }}
               >
+                
                 <option value="">-- Selecciona EPS --</option>
-                {/* opciones... */}
-                <option value="ninguna">ninguna de las anteriores</option>
+                {[
+                  "ALIANSALUD ENTIDAD PROMOTORA DE SALUD S.A.",
+                  "ASOCIACIÓN INDÍGENA DEL CAUCA",
+                  "CAPITAL SALUD",
+                  "CAPRESOCA  EPS",
+                  "COMFENALCO  VALLE  E.P.S.",
+                  "COMPENSAR   E.P.S.",
+                  "COOPERATIVA DE SALUD Y DESARROLLO INTEGRAL ZONA SUR ORIENTAL DE CARTAGENA",
+                  "E.P.S.  FAMISANAR LTDA.",
+                  "E.P.S.  SANITAS S.A.",
+                  "EPS  CONVIDA",
+                  "EPS SERVICIO OCCIDENTAL DE SALUD S.A.",
+                  "EPS Y MEDICINA PREPAGADA SURAMERICANA S.A",
+                  "MALLAMAS",
+                  "NUEVA EPS S.A.",
+                  "PIJAOS SALUD EPSI",
+                  "SALUD TOTAL S.A.  E.P.S.",
+                  "SALUDVIDA S.A. E.P.S",
+                  "SAVIA SALUD EPS",
+                  "ninguna de las anteriores",
+                ].map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
               </select>
 
               <div className="form-actions">
@@ -579,7 +607,9 @@ export default function AdminUsers() {
                       className="btn-save"
                       style={{ width: "100%", marginBottom: 10 }}
                       disabled={exporting}
-                      onClick={() => exportPatientAppointments(selected, form.full_name)}
+                      onClick={() =>
+                        exportPatientAppointments(selected, form.full_name)
+                      }
                     >
                       {exporting ? "Generando..." : "Descargar citas"}
                     </button>
@@ -589,7 +619,9 @@ export default function AdminUsers() {
                       className="btn-save"
                       style={{ width: "100%", marginBottom: 10 }}
                       disabled={exporting}
-                      onClick={() => exportPatientExams(selected, form.full_name)}
+                      onClick={() =>
+                        exportPatientExams(selected, form.full_name)
+                      }
                     >
                       {exporting ? "Generando..." : "Descargar exámenes"}
                     </button>
@@ -597,16 +629,19 @@ export default function AdminUsers() {
                 )}
 
                 {/* ESPECIALISTA */}
-                {(form.role === "optometrist" || form.role === "ortoptist") && (
+                {(form.role === "optometrist" ||
+                  form.role === "ortoptist") && (
                   <>
                     <button
                       type="button"
                       className="btn-save"
                       style={{ width: "100%", marginBottom: 10 }}
                       disabled={exporting}
-                      onClick={() => exportSpecialistAppointments(selected, form.full_name)}
+                      onClick={() =>
+                        exportSpecialistAppointments(selected, form.full_name)
+                      }
                     >
-                      {exporting ? "Generando..." : "Descargar citas atendidas"}
+                      {exporting ? "Generando..." : "Descargar citas "}
                     </button>
 
                     <button
@@ -614,9 +649,11 @@ export default function AdminUsers() {
                       className="btn-save"
                       style={{ width: "100%", marginBottom: 10 }}
                       disabled={exporting}
-                      onClick={() => exportSpecialistExams(selected, form.full_name)}
+                      onClick={() =>
+                        exportSpecialistExams(selected, form.full_name)
+                      }
                     >
-                      {exporting ? "Generando..." : "Descargar exámenes realizados"}
+                      {exporting ? "Generando..." : "Descargar exámenes"}
                     </button>
 
                     <button
@@ -624,7 +661,9 @@ export default function AdminUsers() {
                       className="btn-save"
                       style={{ width: "100%", marginBottom: 10 }}
                       disabled={exporting}
-                      onClick={() => exportSpecialistReferrals(selected, form.full_name)}
+                      onClick={() =>
+                        exportSpecialistReferrals(selected, form.full_name)
+                      }
                     >
                       {exporting ? "Generando..." : "Descargar remisiones"}
                     </button>

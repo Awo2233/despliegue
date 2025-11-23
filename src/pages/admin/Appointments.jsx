@@ -15,13 +15,15 @@ export default function AdminAppointments() {
 
   const fetchAppointments = async () => {
     setLoading(true);
+
     const { data, error } = await supabase
       .from("appointments")
       .select(`
-        id, scheduled_at, status, specialist_role,
+        id, scheduled_at, status, specialist_role, is_deleted,
         patient:profiles!appointments_patient_id_fkey(full_name),
         specialist:profiles!appointments_specialist_id_fkey(full_name)
       `)
+      .eq("is_deleted", false)   // ⬅️ OCULTA LAS ELIMINADAS
       .order("scheduled_at", { ascending: false });
 
     if (error) console.error(error);
@@ -29,11 +31,20 @@ export default function AdminAppointments() {
     setLoading(false);
   };
 
+  // 🔥 SOFT DELETE — Marca como eliminada pero NO la borra
   const deleteAppointment = async (id) => {
     if (!confirm("¿Eliminar cita?")) return;
-    const { error } = await supabase.from("appointments").delete().eq("id", id);
-    if (error) alert("No se pudo eliminar la cita");
-    else fetchAppointments();
+
+    const { error } = await supabase
+      .from("appointments")
+      .update({ is_deleted: true })
+      .eq("id", id);
+
+    if (error) {
+      alert("No se pudo eliminar la cita");
+    } else {
+      fetchAppointments(); // refrescar lista
+    }
   };
 
   const filteredAppointments = appointments.filter(
@@ -44,7 +55,14 @@ export default function AdminAppointments() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1.5rem",
+        }}
+      >
         <h1>Gestión de Citas</h1>
         <button
           onClick={() => navigate("/admin/new-appointment")}
@@ -89,7 +107,15 @@ export default function AdminAppointments() {
             <tbody>
               {filteredAppointments.map((a) => (
                 <tr key={a.id}>
-                  <td>{new Date(a.scheduled_at).toLocaleString("es-CO", { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</td>
+                  <td>
+                    {new Date(a.scheduled_at).toLocaleString("es-CO", {
+                      day: "numeric",
+                      month: "numeric",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </td>
                   <td>{a.patient?.full_name || "Sin nombre"}</td>
                   <td>
                     {a.specialist

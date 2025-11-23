@@ -31,8 +31,10 @@ export default function AdminExams() {
         specialist_role,
         storage_path,
         created_at,
+        is_deleted,
         profiles!exams_patient_id_fkey(full_name, email, patients ( document ))
       `)
+      .eq("is_deleted", false) // ⬅️ SOLO MOSTRAR NO ELIMINADOS
       .order("created_at", { ascending: false });
 
     if (filterState === "pending") query = query.eq("performed", false);
@@ -118,29 +120,31 @@ export default function AdminExams() {
     }
   };
 
+  // ⭐ SOFT DELETE — NO ELIMINA DE LA BASE DE DATOS, SOLO OCULTA
   const deleteExam = async (id) => {
     if (!window.confirm("¿Seguro que deseas eliminar este examen?")) return;
-    const { error } = await supabase.from("exams").delete().eq("id", id);
+
+    const { error } = await supabase
+      .from("exams")
+      .update({ is_deleted: true }) // ⬅️ AQUÍ SE MARCA COMO ELIMINADO
+      .eq("id", id);
+
     if (error) {
       console.error(error);
       alert("Error al eliminar examen");
     } else {
       alert("Examen eliminado correctamente");
-      fetchExams();
+      fetchExams(); // refrescar lista
     }
   };
 
-  // Descargar plantilla desde el bucket 'pantilla' en Supabase Storage
   const downloadTemplate = async () => {
-    // Nombre exacto del archivo en el bucket (según imagen proporcionada)
     const filename = "prantilla examenes optica.pdf";
     const bucket = "pantilla";
     try {
-      // Primero intentar URL pública
       const { data: publicData } = supabase.storage.from(bucket).getPublicUrl(filename);
       const publicUrl = publicData?.publicUrl;
       if (publicUrl) {
-        // Forzar descarga abriendo en nueva pestaña
         const a = document.createElement("a");
         a.href = publicUrl;
         a.download = filename;
@@ -151,9 +155,12 @@ export default function AdminExams() {
         return;
       }
 
-      // Si no es pública, obtener signed URL y descargar el blob para forzar descarga
-      const { data: signedData, error: signedError } = await supabase.storage.from(bucket).createSignedUrl(filename, 120);
-      if (signedError || !signedData?.signedUrl) throw signedError || new Error("No se pudo generar la URL de descarga");
+      const { data: signedData, error: signedError } = await supabase.storage.from(bucket).createSignedUrl(
+        filename,
+        120
+      );
+      if (signedError || !signedData?.signedUrl)
+        throw signedError || new Error("No se pudo generar la URL de descarga");
 
       const resp = await fetch(signedData.signedUrl);
       if (!resp.ok) throw new Error("Error al obtener el archivo desde storage");
