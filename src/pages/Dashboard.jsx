@@ -38,12 +38,9 @@ const Dashboard = () => {
     >
       <div
         style={{
-          width: 720,
-          maxWidth: "95%",
-          background: "white",
-          borderRadius: 10,
-          boxShadow: "0 8px 24px rgba(2,6,23,0.12)",
-          padding: "2.25rem 2rem",
+          width: "100%",
+          maxWidth: 1000,
+          padding: "2.5rem 2rem",
           textAlign: "center",
           display: "flex",
           flexDirection: "column",
@@ -54,7 +51,7 @@ const Dashboard = () => {
           src="/logo.png"
           alt="Logo"
           style={{
-            width: 220,
+              width: 240,
             height: "auto",
             objectFit: "contain",
             marginBottom: 18,
@@ -66,7 +63,7 @@ const Dashboard = () => {
           Aquí podrás acceder a tus interfaces.
         </p>
 
-        <div style={{ width: "100%", maxWidth: 420, marginTop: 20 }}>
+        <div style={{ width: "100%", maxWidth: 520, marginTop: 28, marginBottom: 28 }}>
           <button
             onClick={() => (window.location.href = "/patient/appointments")}
             style={buttonStyle}
