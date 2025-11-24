@@ -41,17 +41,20 @@ const Dashboard = () => {
           width: 720,
           maxWidth: "95%",
           background: "white",
-          borderRadius: 16,
-          boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
-          padding: "2.5rem",
+          borderRadius: 10,
+          boxShadow: "0 8px 24px rgba(2,6,23,0.12)",
+          padding: "2.25rem 2rem",
           textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <img
           src="/logo.png"
           alt="Logo"
           style={{
-            width: 300,
+            width: 220,
             height: "auto",
             objectFit: "contain",
             marginBottom: 18,
@@ -63,17 +66,7 @@ const Dashboard = () => {
           Aquí podrás acceder a tus interfaces.
         </p>
 
-        <div
-          style={{
-            marginTop: 18,
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: 12,
-            maxWidth: 420,
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}
-        >
+        <div style={{ width: "100%", maxWidth: 420, marginTop: 20 }}>
           <button
             onClick={() => (window.location.href = "/patient/appointments")}
             style={buttonStyle}
@@ -126,12 +119,15 @@ const buttonStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  width: "100%",
   background: "linear-gradient(90deg,#0b63ff,#0066cc)",
   color: "white",
   border: "none",
-  padding: "12px 16px",
-  borderRadius: 10,
-  fontSize: 16,
+  padding: "14px 18px",
+  borderRadius: 8,
+  fontSize: 15,
+  fontWeight: 600,
   cursor: "pointer",
-  boxShadow: "0 6px 18px rgba(11,99,255,0.28)",
+  boxShadow: "0 6px 18px rgba(11,99,255,0.12)",
+  marginBottom: 12,
 }
