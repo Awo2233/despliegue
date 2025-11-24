@@ -109,8 +109,7 @@ export default function AppointmentsList() {
         body: [
           ["Paciente", nombrePaciente],
           ["Fecha de la cita", fecha],
-          ["Especialista (rol)", especialistaRol],
-          ["Nombre del especialista", nombreEspecialista],
+          ["Especialista ", especialistaRol],
           ["Dirección", direccion],
         ],
       });
