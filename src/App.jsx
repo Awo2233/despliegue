@@ -115,7 +115,7 @@ export default function App() {
                   <Route path="/patient/exams" element={<PatientExams />} />
                   <Route path="/patient/referrals" element={<PatientReferrals />} />
                   <Route path="/patient/games" element={<PatientGames />} />
-                  <Route path="*" element={<Navigate to="/patient/profile" replace />} />
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </>
               )}
             </Route>
