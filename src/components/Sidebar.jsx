@@ -59,7 +59,7 @@ const Sidebar = ({ role }) => {
         <h2>
           {role === "admin"
             ? "Administrador"
-            : role === "optometrista" || role === "ortoptista"
+            : role === "optometrist" || role === "ortoptist"
             ? "Especialista"
             : "Paciente"}
         </h2>
