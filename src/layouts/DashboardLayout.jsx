@@ -14,7 +14,7 @@ export default function DashboardLayout() {
     <div className="layout-container">
       {!hideSidebar && <Sidebar role={profile?.role} />}
 
-      <main className="layout-content">
+      <main className={`layout-content ${hideSidebar ? "no-sidebar" : ""}`}>
         <Outlet />
       </main>
     </div>

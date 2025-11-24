@@ -15,6 +15,11 @@
   display: block;
 }
 
+/* Cuando el sidebar no se renderiza (p.ej. /dashboard), quitar el margen reservado */
+.layout-content.no-sidebar {
+  margin-left: 0 !important;
+}
+
 /* Center the page container inside the layout content so forms appear centered in viewport */
 .layout-content .page-container,
 .layout-content .container {
