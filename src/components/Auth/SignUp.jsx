@@ -9,24 +9,28 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
     // Verificar contraseñas
     if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden.");
+      setError("Las contraseñas no coinciden.");
       return;
     }
 
     // Crear usuario en Supabase Auth
-    const { data, error } = await supabase.auth.signUp({
+    setError("");
+    setSuccess("");
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
     });
 
-    if (error) {
-      alert(error.message);
+    if (signUpError) {
+      setError(signUpError.message);
       return;
     }
 
@@ -46,7 +50,7 @@ export default function SignUp() {
 
       if (profileError) {
         console.error("Error al insertar en profiles:", profileError.message);
-        alert("Error al crear el perfil: " + profileError.message);
+        setError("Error al crear el perfil: " + profileError.message);
         return;
       }
 
@@ -63,11 +67,12 @@ export default function SignUp() {
 
       if (patientError) {
         console.error("Error al insertar en patients:", patientError.message);
-        alert("Error al crear detalles del paciente.");
+        setError("Error al crear detalles del paciente. Intenta nuevamente más tarde.");
+        return;
       }
     }
 
-    alert("Cuenta creada correctamente. Verifica tu correo.");
+    setSuccess("Cuenta creada correctamente. Verifica tu correo.");
     navigate("/signin");
   };
 
@@ -78,11 +83,21 @@ export default function SignUp() {
         Crea tu cuenta para acceder a la plataforma de JBSOptics.
       </p>
       <form onSubmit={handleSignUp}>
+        {error && (
+          <div style={{ background: "#ffe8e8", color: "#b91c1c", padding: 12, borderRadius: 8, marginBottom: 12 }}>
+            {error}
+          </div>
+        )}
+        {success && (
+          <div style={{ background: "#ebf8ff", color: "#0369a1", padding: 12, borderRadius: 8, marginBottom: 12 }}>
+            {success}
+          </div>
+        )}
         <input
           type="text"
           placeholder="Nombre completo"
           value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          onChange={(e) => { setFullName(e.target.value); setError(""); }}
           required
         />
 
@@ -90,7 +105,7 @@ export default function SignUp() {
           type="email"
           placeholder="Correo electrónico"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => { setEmail(e.target.value); setError(""); }}
           required
         />
 
@@ -98,7 +113,7 @@ export default function SignUp() {
           type="text"
           placeholder="Número de teléfono"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => { setPhone(e.target.value); setError(""); }}
           required
         />
 
@@ -106,7 +121,7 @@ export default function SignUp() {
           type="password"
           placeholder="Contraseña"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => { setPassword(e.target.value); setError(""); }}
           required
         />
 
@@ -114,7 +129,7 @@ export default function SignUp() {
           type="password"
           placeholder="Confirmar contraseña"
           value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          onChange={(e) => { setConfirmPassword(e.target.value); setError(""); }}
           required
         />
 
