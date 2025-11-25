@@ -101,7 +101,6 @@ export default function AdminHistory() {
                 <th className="px-4 py-2 text-left">Tabla</th>
                 <th className="px-4 py-2 text-left">Usuario</th>
                 <th className="px-4 py-2 text-left">Fecha</th>
-                <th className="px-4 py-2 text-left">Antes</th>
               </tr>
             </thead>
 
