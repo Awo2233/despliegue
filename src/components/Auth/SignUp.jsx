@@ -64,10 +64,15 @@ export default function SignUp() {
           document: null,
         },
       ]);
+      if (patientError) {
+        // No bloquear el registro si no existen detalles en `patients`. Loguear y continuar.
+        console.warn("Error al insertar en patients (no crítico):", patientError.message);
+        // No hacemos setError ni return aquí para que el registro continúe correctamente.
+      }
 
-
-    setSuccess("Cuenta creada correctamente. Verifica tu correo.");
-    navigate("/signin");
+      setSuccess("Cuenta creada correctamente. Verifica tu correo.");
+      navigate("/signin");
+    }
   };
 
   return (
