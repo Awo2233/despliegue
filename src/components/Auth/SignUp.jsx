@@ -65,12 +65,6 @@ export default function SignUp() {
         },
       ]);
 
-      if (patientError) {
-        console.error("Error al insertar en patients:", patientError.message);
-        setError("Error al crear detalles del paciente. Intenta nuevamente más tarde.");
-        return;
-      }
-    }
 
     setSuccess("Cuenta creada correctamente. Verifica tu correo.");
     navigate("/signin");
