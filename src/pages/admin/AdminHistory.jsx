@@ -121,15 +121,6 @@ export default function AdminHistory() {
                     <td className="px-4 py-2">
                       {new Date(log.created_at).toLocaleString()}
                     </td>
-                    <td className="px-4 py-2">
-                      {humanOld ? (
-                        <pre className="bg-gray-100 p-2 rounded text-sm whitespace-pre-wrap">
-                          {formatJSON(humanOld)}
-                        </pre>
-                      ) : (
-                        <span className="text-gray-400">—</span>
-                      )}
-                    </td>
                   </tr>
                 );
               })}
